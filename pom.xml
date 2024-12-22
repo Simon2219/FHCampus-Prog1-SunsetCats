@@ -16,6 +16,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.4</version> <!-- Replace with the latest version -->
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>22.0.1</version>
@@ -91,7 +101,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                fhcampus.sunsetcats.fhcampusprog1sunsetcats/fhcampus.sunsetcats.fhcampusprog1sunsetcats.HelloApplication
+                                fhcampus.sunsetcats.fhcampusprog1sunsetcats/fhcampus.sunsetcats.fhcampusprog1sunsetcats.AppMain
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

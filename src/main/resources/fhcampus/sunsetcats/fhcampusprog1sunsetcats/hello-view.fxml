@@ -10,7 +10,7 @@
 
 <?import javafx.scene.layout.Region?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.HelloController">
+            fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.UIController">
 
     <!-- Left Menu Section -->
     <left>
