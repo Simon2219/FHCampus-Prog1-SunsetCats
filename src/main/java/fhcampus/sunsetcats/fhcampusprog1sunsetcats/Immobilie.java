@@ -4,24 +4,10 @@ import java.util.EnumMap;
 
 public class Immobilie
 {
+
+
     //===========================================================================|| DATA ||===========================================================================================================
 
-    //Listing MetaData
-    private Integer ID;
-    private Integer verticalID;
-    private Integer adTypeID;
-    private Integer productID;
-
-    private String description;
-
-    private String immoType;
-
-    private Integer postcode;
-    private String district;
-    private String address;
-
-    private Integer price;
-    private String priceDisplay;
 
     public enum AttributeKey
     {

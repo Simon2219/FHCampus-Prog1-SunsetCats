@@ -31,10 +31,18 @@ public class AppMain extends Application
     {
         //launch();
 
+        runSearch();
+    }
+
+    private static void runSearch()
+    {
         try
         {
-            Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote?sfId=4d397651-95f3-402c-8fd4-8eb4c15d49a8&isNavigation=true&rows=30&areaId=900&NO_OF_ROOMS_BUCKET=5X5&page" +
-             "=1", false );
+            //Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote?sfId=4d397651-95f3-402c-8fd4-8eb4c15d49a8&isNavigation=true&rows=30&areaId=900&NO_OF_ROOMS_BUCKET=5X5",
+                   // true );
+
+            Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/",
+                    true);
 
             //Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/");
 
@@ -56,12 +64,12 @@ public class AppMain extends Application
             e.printStackTrace();
         }
     }
-
     private static void printResults(ArrayList<Immobilie> searchResults)
     {
         for(Immobilie currentImmobilie : searchResults)
         {
             System.out.printf("ID: %s  -  %s %s", currentImmobilie.getAttribute(Immobilie.AttributeKey.ID), currentImmobilie.getAttribute(Immobilie.AttributeKey.DESCRIPTION), System.lineSeparator());
         }
+        System.out.println(searchResults.size());
     }
 }

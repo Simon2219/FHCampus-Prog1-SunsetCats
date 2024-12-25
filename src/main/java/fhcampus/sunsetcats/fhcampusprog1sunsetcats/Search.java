@@ -14,7 +14,7 @@ public class Search
     private final String searchTarget;
     public HashMap<String,HashMap<String,String>> rawSearchResults = new HashMap<>();
 
-
+    public Integer duplicates = 0;
     // Constructor for common fields
     public Search(String startURL, ArrayList<String> searchFilters, boolean continueScrape)
     {
@@ -37,7 +37,7 @@ public class Search
         this.searchStartURL = startURL;
         this.searchFilters = searchFilters;
 
-        this.continueScrape = true;
+        this.continueScrape = false;
 
         if(searchStartURL.startsWith("https://www.willhaben.at"))
         {
@@ -72,7 +72,7 @@ public class Search
         this.searchStartURL = startURL;
         this.searchFilters = new ArrayList<>();
 
-        this.continueScrape = true;
+        this.continueScrape = false;
 
         if(searchStartURL.startsWith("https://www.willhaben.at"))
         {

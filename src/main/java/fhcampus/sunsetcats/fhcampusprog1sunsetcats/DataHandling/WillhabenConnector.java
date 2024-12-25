@@ -12,18 +12,15 @@ import java.util.Optional;
 public class WillhabenConnector extends DataConnector
 {
 
-    private Search lastSearch; //Letzte durchgeführte Suche
-    private final String DEFAULT_START = "https://www.willhaben.at/iad/immobilien/"; //Default Link wenn keiner gesetzt wurde
-
-    private final String categoryTag = "/iad/immobilien"; //Tag of current category to search
-    private final String cssQueryTag = "a[href^='/iad/immobilien/']";
-
     //Constructor
     public WillhabenConnector()
     {
-        super("https://www.willhaben.at"); //Set Base Link
-    }
+        super("https://www.willhaben.at",
+                "https://www.willhaben.at/iad/immobilien/",
+                "/iad/immobilien",
+                "a[href^='/iad/immobilien/']"); //Set Base Link
 
+    }
 
 
     //===========================================================================|| MAIN FUNCTIONS ||===========================================================================================================
@@ -327,21 +324,7 @@ public class WillhabenConnector extends DataConnector
 
 
     //Gibt die letzte durchgeführte Suche zurück
-    @Override
-    public Search getLastSearch()
-    {
-        return this.lastSearch;
-    }
 
-    public String getCategoryTag()
-    {
-        return categoryTag;
-    }
-
-    public String getCssQueryTag()
-    {
-        return cssQueryTag;
-    }
 
 
 

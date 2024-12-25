@@ -10,158 +10,69 @@ import java.util.*;
 import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Search;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 
-public final class WillhabenScraper
+public final class WillhabenScraper extends SiteScraper
 {
 
-    private final String START_URL;
-    private final String BASE_URL;
-    private final String CATEGORY_TAG;
-    private final String QUERY_TAG;
-
-    private final HttpClient httpClient;
-    private final Search searchObject;
+    private final String paginationButton = "a[data-testid='pagination-top-next-button']";
 
 
     // Constructor
     // Muss der connector & die durchzuführende Suche übergeben werden
     public WillhabenScraper(WillhabenConnector connector, Search currentSearch)
     {
-        this.BASE_URL = connector.getBaseURL();
-        this.httpClient = connector.getHttpClient();
-
-        this.searchObject = currentSearch;
-        this.START_URL = searchObject.getSearchStartURL();
-
-        this.CATEGORY_TAG = connector.getCategoryTag();
-        this.QUERY_TAG = connector.getCssQueryTag();
+        super(connector, currentSearch);
     }
+
 
 
     //===================================================================== || MAIN FUNCTIONS || =====================================================================
 
 
-    // Hauptfunktion um Suche zu starten
-    public void start() throws IOException, InterruptedException
+
+    @Override
+    protected Optional<JSONArray> validateResponse(HttpResponse<String> response)
     {
-        System.out.println("Scraping from - " + START_URL);
-
-        if (searchObject.continueScrape()) // ? Soll vom Link ausgehend weitergesucht werden oder nur die Ergebnisse
-        {
-            scrapeAllCategories(START_URL); // Scrape alle Kategorien
-        } else
-        {
-            scrapeCategory(START_URL); // Scrape nur eine
-        }
-    }
-
-
-    // Alle Kategorien ausgehend vom Link scrapen
-    private void scrapeAllCategories(String url) throws IOException, InterruptedException
-    {
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); // Sende Request an Website
-
-        if (response.statusCode() != 200) // HTTP Response hat Status Codes - 200 = erfolgreich
-        {
-            System.err.println("Failed to fetch categories from: " + url);
-            return;
-        }
-
         String pageContent = response.body();
-        Document document = Jsoup.parse(pageContent);
-        Elements categoryLinks = document.select(QUERY_TAG); // Get All listed Links starting with /iad/immobilien
 
-        for (Element link : categoryLinks) // Für alle Links der Kategorie
+        String jsonResponse = extractJsonFromHTML(pageContent);
+        if (jsonResponse == null || jsonResponse.isEmpty())
         {
-            String categoryUrl = BASE_URL + link.attr("href"); // Build Category URL -> BASE + Category Link
-
-            if (!categoryUrl.contains("javascript")) // Only follow navigable links
-            {
-                System.out.println("Scraping category: " + categoryUrl);
-
-                scrapeCategory(categoryUrl);
-            }
-        }
-    }
-
-    // Spezielle Kategorie wird gescraped -> Alle Seiten durchgehen
-    private void scrapeCategory(String url) throws IOException, InterruptedException
-    {
-        String currentUrl = url; // Start with the initial URL
-
-        // URL muss der Kategorie entsprechen
-        if (!url.startsWith(BASE_URL + CATEGORY_TAG))
-        {
-            System.err.println("Provided URL is not a category-specific URL: " + url);
-            return;
+            System.err.println("JSON Response String empty!");
+            return Optional.empty();
         }
 
-        int siteNR = 0;
-        while (currentUrl != null) // Loop -> bis es keine weiteren Seiten mehr gibt
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        if (!jsonObject.has("props") || !jsonObject.getJSONObject("props").has("pageProps") || !jsonObject.getJSONObject("props").getJSONObject("pageProps").has("searchResult"))
         {
-
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(currentUrl)).GET().build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); // Neue Request an Website
-
-            if (response.statusCode() != 200) // Nicht erfolgreich
-            {
-                System.err.println("Failed to fetch category page: " + currentUrl);
-                return;
-            }
-
-            // Überprüfe ob die Request die erwartete JSON Struktur hat -> ansonsten Abbruch
-            Optional<JSONObject> validatedResponse = validateResponse(response);
-            if (validatedResponse.isEmpty())
-            {
-                System.err.println("WILLHABEN SCRAPER: Response invalid");
-                return;
-            }
-
-            // Extract Data der Seite
-            scrapeSearchResults(validatedResponse.get());
-
-
-            // Nächste Seite ->
-            // Parse the response to find the next page URL
-            String nextURL = getNextPageUrl(response.body());
-
-            if (nextURL != null && !nextURL.startsWith(BASE_URL + CATEGORY_TAG)) //Muss Seite selber Kategorie sein
-            {
-                System.err.println("Next page URL is not a valid category-specific URL: " + nextURL);
-                return;
-            }
-
-            currentUrl = nextURL; //current URL zu neuer setzen & Loop wiederholen
-
-            siteNR++; //Debug
-            System.err.println(siteNR); //Debug
+            System.err.println("Invalid JSON structure");
+            return Optional.empty();
         }
-    }
 
-
-    private void scrapeSearchResults(JSONObject searchResults)
-    {
-        JSONArray resultsArray = searchResults.getJSONArray("advertSummary");
-
-        for (int i = 0; i < resultsArray.length(); i++)
+        JSONObject categoryResults = jsonObject.getJSONObject("props").getJSONObject("pageProps").getJSONObject("searchResult");
+        if (!categoryResults.has("advertSummaryList"))
         {
-            JSONObject result = resultsArray.getJSONObject(i);
-            extractDataFromResult(result);
+            System.err.println("No 'advertSummaryList' found in 'searchResult'.");
+            return Optional.empty();
         }
+
+        JSONObject advertSummaryList = categoryResults.getJSONObject("advertSummaryList");
+        if (!advertSummaryList.has("advertSummary"))
+        {
+            System.err.println("No 'advertSummary' found in 'advertSummaryList'.");
+            return Optional.empty();
+        }
+
+        return Optional.of(advertSummaryList.getJSONArray("advertSummary"));
     }
 
 
 
-
-    private void extractDataFromResult(JSONObject currentItem)
+    @Override
+    protected void extractDataFromResult(JSONObject currentItem)
     {
-        HashMap<String, String> extractedResults = new HashMap<String, String>();
+        HashMap<String, String> extractedResults = new HashMap<>();
 
         // Extract high-level attributes
         extractedResults.put("id", currentItem.optString("id", "Unknown"));
@@ -196,7 +107,6 @@ public final class WillhabenScraper
         }
 
 
-
         //Extract Floor Plan
         if (currentItem.has("floorPlans"))
         {
@@ -222,76 +132,23 @@ public final class WillhabenScraper
             {
                 JSONObject image = advertImages.getJSONObject(i);
 
-                extractedResults.put("image"+i,image.optString("mainImageUrl", "Unknown"));
+                extractedResults.put("image" + i, image.optString("mainImageUrl", "Unknown"));
             }
         }
 
+        String resultID = extractedResults.get("id");
+        String resultDescription = extractedResults.get("description");
+
+        if(searchObject.rawSearchResults.containsKey(resultID))
+        {
+            if(!searchObject.rawSearchResults.get(resultID).get("description").equals(resultDescription))
+            {
+                System.err.println("WillhabenScraper: Duplicate ID for different Immo Objects");
+            }
+            return;
+        }
 
         searchObject.rawSearchResults.put(extractedResults.get("id"), extractedResults);
-    }
-
-
-    private Optional<JSONObject> validateResponse(HttpResponse<String> response)
-    {
-        String pageContent = response.body();
-
-        String jsonResponse = extractJsonFromHTML(pageContent);
-        if (jsonResponse == null || jsonResponse.isEmpty())
-        {
-            System.err.println("JSON Response String empty!");
-            return Optional.empty();
-        }
-
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        if (!jsonObject.has("props") || !jsonObject.getJSONObject("props").has("pageProps") || !jsonObject.getJSONObject("props").getJSONObject("pageProps").has("searchResult"))
-        {
-            System.err.println("Invalid JSON structure");
-            return Optional.empty();
-        }
-
-        JSONObject categoryResults = jsonObject.getJSONObject("props").getJSONObject("pageProps").getJSONObject("searchResult");
-        if (!categoryResults.has("advertSummaryList"))
-        {
-            System.err.println("No 'advertSummaryList' found in 'searchResult'.");
-            return Optional.empty();
-        }
-
-        JSONObject advertSummaryList = categoryResults.getJSONObject("advertSummaryList");
-        if (!advertSummaryList.has("advertSummary"))
-        {
-            System.err.println("No 'advertSummary' found in 'advertSummaryList'.");
-            return Optional.empty();
-        }
-
-        return Optional.of(advertSummaryList);
-    }
-
-
-
-    private String getNextPageUrl(String html)
-    {
-        try
-        {
-            // Parse the HTML using JSoup
-            Document document = Jsoup.parse(html);
-
-            // Find the pagination button with the specified data-testid
-            // TODO Adjust to other websites
-            Element paginationButton = document.selectFirst("a[data-testid='pagination-top-next-button']");
-
-            if (paginationButton != null)
-            {
-                // Extract the href attribute and build the next page URL
-                String nextPagePath = paginationButton.attr("href");
-                return BASE_URL + nextPagePath;
-            }
-        }
-        catch (Exception e)
-        {
-            System.err.println("Error retrieving next page URL: " + e.getMessage());
-        }
-
-        return null; // No next page found
     }
 
 
@@ -304,12 +161,38 @@ public final class WillhabenScraper
         int startIndex = html.indexOf(startTag) + startTag.length();
         int endIndex = html.indexOf(endTag, startIndex);
 
-        if (startIndex > startTag.length() && endIndex > startIndex)
+        if(startIndex > startTag.length() && endIndex > startIndex)
         {
-            return html.substring(startIndex, endIndex);
+            return html.substring(startIndex,endIndex);
         }
+
         return null;
     }
+
+
+
+//===================================================================== || SIDE FUNCTIONS || =====================================================================
+
+
+
+    @Override
+    protected String getCategoryTag()
+    {
+        return ((WillhabenConnector) connector).getCategoryTag();
+    }
+
+    @Override
+    protected String getCssQueryTag()
+    {
+        return ((WillhabenConnector) connector).getCssQueryTag();
+    }
+
+    @Override
+    protected String getPaginationButtonSelector() {
+        return paginationButton;
+    }
+
+
 
 
 
