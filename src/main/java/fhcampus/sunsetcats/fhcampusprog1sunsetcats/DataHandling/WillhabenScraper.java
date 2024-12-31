@@ -1,21 +1,21 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats.DataHandling;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.util.logging.Logger;
 
 import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Search;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
+
 public final class WillhabenScraper extends SiteScraper
 {
 
-    private final String paginationButton = "a[data-testid='pagination-top-next-button']";
+    private final String paginationButtonMarker = "a[data-testid='pagination-top-next-button']";
+
+    private static final Logger Debug = Logger.getLogger(WillhabenScraper.class.getName());
 
 
     // Constructor
@@ -39,28 +39,28 @@ public final class WillhabenScraper extends SiteScraper
         String jsonResponse = extractJsonFromHTML(pageContent);
         if (jsonResponse == null || jsonResponse.isEmpty())
         {
-            System.err.println("JSON Response String empty!");
+            Debug.severe("JSON Response String empty!");
             return Optional.empty();
         }
 
         JSONObject jsonObject = new JSONObject(jsonResponse);
         if (!jsonObject.has("props") || !jsonObject.getJSONObject("props").has("pageProps") || !jsonObject.getJSONObject("props").getJSONObject("pageProps").has("searchResult"))
         {
-            System.err.println("Invalid JSON structure");
+            Debug.severe("Invalid JSON structure");
             return Optional.empty();
         }
 
         JSONObject categoryResults = jsonObject.getJSONObject("props").getJSONObject("pageProps").getJSONObject("searchResult");
         if (!categoryResults.has("advertSummaryList"))
         {
-            System.err.println("No 'advertSummaryList' found in 'searchResult'.");
+            Debug.severe("No 'advertSummaryList' found in 'searchResult'.");
             return Optional.empty();
         }
 
         JSONObject advertSummaryList = categoryResults.getJSONObject("advertSummaryList");
         if (!advertSummaryList.has("advertSummary"))
         {
-            System.err.println("No 'advertSummary' found in 'advertSummaryList'.");
+            Debug.severe("No 'advertSummary' found in 'advertSummaryList'.");
             return Optional.empty();
         }
 
@@ -84,11 +84,11 @@ public final class WillhabenScraper extends SiteScraper
 
         if (!currentItem.has("attributes") || !currentItem.getJSONObject("attributes").has("attribute"))
         {
-            System.err.println("No attribute Array returned!");
+            Debug.severe("No attribute Array returned!");
             return;
         }
-        JSONArray allAttributes = currentItem.getJSONObject("attributes").getJSONArray("attribute");
 
+        JSONArray allAttributes = currentItem.getJSONObject("attributes").getJSONArray("attribute");
 
         for (int count = 0; count < allAttributes.length(); count++)
         {
@@ -98,7 +98,7 @@ public final class WillhabenScraper extends SiteScraper
             JSONArray valueArray = currentAttribute.optJSONArray("values"); //All Values of that certain attribute - mostly 1 but can be more
             if (valueArray == null || valueArray.isEmpty())
             {
-                System.err.println("The Value Array is Empty! ");
+                Debug.severe("The Value Array is Empty! ");
                 return;
             }
 
@@ -143,7 +143,7 @@ public final class WillhabenScraper extends SiteScraper
         {
             if(!searchObject.rawSearchResults.get(resultID).get("description").equals(resultDescription))
             {
-                System.err.println("WillhabenScraper: Duplicate ID for different Immo Objects");
+                Debug.warning("WillhabenScraper: Duplicate ID for different Immo Objects");
             }
             return;
         }
@@ -189,7 +189,7 @@ public final class WillhabenScraper extends SiteScraper
 
     @Override
     protected String getPaginationButtonSelector() {
-        return paginationButton;
+        return paginationButtonMarker;
     }
 
 

@@ -1,9 +1,12 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
 import java.util.EnumMap;
+import java.util.logging.Logger;
 
 public class Immobilie
 {
+
+    private static final Logger Debug = Logger.getLogger(Immobilie.class.getName());
 
 
     //===========================================================================|| DATA ||===========================================================================================================
@@ -51,6 +54,12 @@ public class Immobilie
 
     private final EnumMap<AttributeKey, Object> attributes = new EnumMap<>(AttributeKey.class);
 
+
+    public Immobilie()
+    {
+
+    }
+
     //===========================================================================|| SIDE FUNCTIONS ||===========================================================================================================
 
 
@@ -71,7 +80,7 @@ public class Immobilie
 
             attributes.put(key, defaultValue);
 
-            System.err.println("Value provided for key " + key + " cannot be cast to " + key.getType().getSimpleName()
+            Debug.severe("Value provided for key " + key + " cannot be cast to " + key.getType().getSimpleName()
                     + ": " + value + ". Using default value: " + defaultValue);
         }
     }

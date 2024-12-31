@@ -6,11 +6,12 @@ import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Search;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
-
+import java.util.logging.Logger;
 
 
 public class WillhabenConnector extends DataConnector
 {
+    private static final Logger Debug = Logger.getLogger(WillhabenConnector.class.getName());
 
     //Constructor
     public WillhabenConnector()
@@ -27,28 +28,17 @@ public class WillhabenConnector extends DataConnector
 
 
     //Beginnt eine Suche - Muss ein Search Objekt übergeben werden
-    public Optional<ArrayList<Immobilie>> startSearch(Search currentSearch)
+    public ArrayList<Immobilie> startSearch(Search currentSearch) throws Exception
     {
-        try
-        {
-            WillhabenScraper scraper = new WillhabenScraper(this, currentSearch); //Neue Scraper Instanz
-            scraper.start();
+        WillhabenScraper scraper = new WillhabenScraper(this, currentSearch); //Neue Scraper Instanz
+        scraper.start();
 
-            lastSearch = currentSearch;
+        lastSearch = currentSearch;
 
-            return Optional.of(processSearchResults(currentSearch)); //Wandelt die Suchergebnisse in Immobilien Objekte und gibt diese zurück
-        }
-        catch(IllegalArgumentException e)
-        {
-            System.err.println("WILLHABEN CONNECTOR: Wrong URL Format");
-            System.err.println(e.getMessage());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        ArrayList<Immobilie> results = processSearchResults(currentSearch); //Wandelt die Suchergebnisse in Immobilien Objekte und gibt diese zurück
+        if(results.isEmpty()) { throw new IllegalStateException(); }
 
-        return Optional.empty();
+        return results;
     }
 
 
@@ -321,10 +311,6 @@ public class WillhabenConnector extends DataConnector
 
 
     //===========================================================================|| SIDE FUNCTIONS ||===========================================================================================================
-
-
-    //Gibt die letzte durchgeführte Suche zurück
-
 
 
 

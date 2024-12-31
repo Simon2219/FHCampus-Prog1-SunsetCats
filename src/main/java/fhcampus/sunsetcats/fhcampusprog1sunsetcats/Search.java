@@ -14,7 +14,11 @@ public class Search
     private final String searchTarget;
     public HashMap<String,HashMap<String,String>> rawSearchResults = new HashMap<>();
 
+
     public Integer duplicates = 0;
+
+
+
     // Constructor for common fields
     public Search(String startURL, ArrayList<String> searchFilters, boolean continueScrape)
     {

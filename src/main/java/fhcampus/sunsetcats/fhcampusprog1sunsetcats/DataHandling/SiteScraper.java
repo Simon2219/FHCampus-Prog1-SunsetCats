@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +16,7 @@ import org.jsoup.nodes.Element;
 
 public abstract class SiteScraper
 {
-
+    private static final Logger Debug = Logger.getLogger(SiteScraper.class.getName());
     protected final DataConnector connector;
     protected final Search searchObject;
 
@@ -54,18 +55,20 @@ public abstract class SiteScraper
                 scrapeSearchPages(categoryUrl);
             }
         }
-        System.err.println("No new Categories found!");
+        Debug.severe("No new Categories found!");
     }
 
     // Scrape over all pages of a specific search
     private void scrapeSearchPages(String url) throws IOException, InterruptedException
     {
-        System.err.println("Currently Scraping those Pages:     " + url);
+        Debug.info("Currently Scraping those Pages:     " + url);
+
         if (!url.startsWith(connector.getBaseURL() + getCategoryTag()))
         {
-            System.err.println("Invalid category URL: " + url);
+            Debug.info("Invalid category URL: " + url);
             return;
         }
+
         int count = 0;
         String currentUrl = url;
         while (currentUrl != null)
@@ -80,8 +83,8 @@ public abstract class SiteScraper
             currentUrl = getNextPageUrl(response.body());
             count++;
         }
-        System.err.println("Page Count:   " + count);
-        System.err.println("Item Total:  " + searchObject.rawSearchResults.size());
+        Debug.info("Page Count: " + count);
+        Debug.info("Item Total: " + searchObject.rawSearchResults.size());
     }
 
 
@@ -103,7 +106,7 @@ public abstract class SiteScraper
         HttpResponse<String> response = connector.getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200)
         {
-            System.err.println("Failed to fetch URL: " + url);
+            Debug.severe("Failed to fetch URL: " + url);
             return null;
         }
         return response;
@@ -130,11 +133,13 @@ public abstract class SiteScraper
             }
         } catch (Exception e)
         {
-            System.err.println("Error retrieving next page URL: " + e.getMessage());
+            Debug.severe("Error retrieving next page URL: " + e.getMessage());
         }
 
         return null; // No next page found
     }
+
+
 
     // Abstract methods for site-specific behavior
 
