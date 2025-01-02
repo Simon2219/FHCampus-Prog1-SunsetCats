@@ -12,7 +12,7 @@ public class Search
     private final boolean continueScrape;
 
     private final String searchTarget;
-    public HashMap<String,HashMap<String,String>> rawSearchResults = new HashMap<>();
+    private HashMap<String,HashMap<String,String>> rawSearchResults = new HashMap<>();
 
 
     public Integer duplicates = 0;
@@ -90,6 +90,24 @@ public class Search
 
 
 
+    public void addResult(String id, HashMap<String,String> result)
+    {
+        rawSearchResults.put(id, result);
+    }
+
+    public boolean containsResult(String id)
+    {
+        if(rawSearchResults.containsKey(id))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public HashMap<String, HashMap<String,String>> getRawSearchResults()
+    {
+        return rawSearchResults;
+    }
 
 
     public String getSearchStartURL()

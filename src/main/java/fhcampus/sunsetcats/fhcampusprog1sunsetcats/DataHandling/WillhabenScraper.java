@@ -1,5 +1,7 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats.DataHandling;
 
+import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.logging.Logger;
@@ -7,13 +9,13 @@ import java.util.logging.Logger;
 import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Search;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 
 public final class WillhabenScraper extends SiteScraper
 {
-
-    private final String paginationButtonMarker = "a[data-testid='pagination-top-next-button']";
 
     private static final Logger Debug = Logger.getLogger(WillhabenScraper.class.getName());
 
@@ -22,12 +24,63 @@ public final class WillhabenScraper extends SiteScraper
     // Muss der connector & die durchzuführende Suche übergeben werden
     public WillhabenScraper(WillhabenConnector connector, Search currentSearch)
     {
-        super(connector, currentSearch);
+        super(
+                connector,
+                currentSearch,
+                "https://www.willhaben.at",
+                "https://www.willhaben.at/iad/immobilien/",
+                "/iad/immobilien",
+                "a[href^='/iad/immobilien/']",
+                "a[data-testid='pagination-top-next-button']",
+                "<script id=\"__NEXT_DATA__\" type=\"application/json\">",
+                "</script>"
+                );
     }
 
 
 
     //===================================================================== || MAIN FUNCTIONS || =====================================================================
+
+
+    // Main scraping entry point
+    @Override
+    public void start()
+    {
+        try
+        {
+            String startUrl = searchObject.getSearchStartURL();
+            if(startUrl == null) startUrl = DEFAULT_START;
+
+            ArrayList<JSONObject> searchResults = new ArrayList<>();
+
+            if (searchObject.continueScrape())
+            {
+                searchResults = scrapeAllCategories(startUrl);
+            }
+            else
+            {
+                searchResults = scrapeSearchPages(startUrl);
+            }
+
+            fillSearchObject(searchResults);
+        }
+        catch(IllegalArgumentException e)
+        {
+            Debug.severe("No Response for URL " + e.getMessage());
+        }
+    }
+
+
+
+    protected void fillSearchObject(ArrayList<JSONObject> resultArray)
+    {
+        for(JSONObject result : resultArray)
+        {
+            HashMap<String, String> extractedResult = extractDataFromResult(result);
+
+            searchObject.addResult(extractedResult.get("id"), extractedResult);
+        }
+    }
 
 
 
@@ -39,14 +92,14 @@ public final class WillhabenScraper extends SiteScraper
         String jsonResponse = extractJsonFromHTML(pageContent);
         if (jsonResponse == null || jsonResponse.isEmpty())
         {
-            Debug.severe("JSON Response String empty!");
+            Debug.warning("JSON Response String empty!");
             return Optional.empty();
         }
 
         JSONObject jsonObject = new JSONObject(jsonResponse);
         if (!jsonObject.has("props") || !jsonObject.getJSONObject("props").has("pageProps") || !jsonObject.getJSONObject("props").getJSONObject("pageProps").has("searchResult"))
         {
-            Debug.severe("Invalid JSON structure");
+            Debug.warning("Invalid JSON structure");
             return Optional.empty();
         }
 
@@ -68,9 +121,9 @@ public final class WillhabenScraper extends SiteScraper
     }
 
 
-
+    // Returns all Data from a specific Listing
     @Override
-    protected void extractDataFromResult(JSONObject currentItem)
+    protected HashMap<String,String> extractDataFromResult(JSONObject currentItem) throws IllegalArgumentException
     {
         HashMap<String, String> extractedResults = new HashMap<>();
 
@@ -85,7 +138,7 @@ public final class WillhabenScraper extends SiteScraper
         if (!currentItem.has("attributes") || !currentItem.getJSONObject("attributes").has("attribute"))
         {
             Debug.severe("No attribute Array returned!");
-            return;
+            throw new IllegalArgumentException();
         }
 
         JSONArray allAttributes = currentItem.getJSONObject("attributes").getJSONArray("attribute");
@@ -99,7 +152,7 @@ public final class WillhabenScraper extends SiteScraper
             if (valueArray == null || valueArray.isEmpty())
             {
                 Debug.severe("The Value Array is Empty! ");
-                return;
+                throw new IllegalArgumentException();
             }
 
             String value = valueArray.getString(0); //TODO | Only Gets 1 Value right now, ignores others - TODO EXTRACT ALL
@@ -136,38 +189,9 @@ public final class WillhabenScraper extends SiteScraper
             }
         }
 
-        String resultID = extractedResults.get("id");
-        String resultDescription = extractedResults.get("description");
-
-        if(searchObject.rawSearchResults.containsKey(resultID))
-        {
-            if(!searchObject.rawSearchResults.get(resultID).get("description").equals(resultDescription))
-            {
-                Debug.warning("WillhabenScraper: Duplicate ID for different Immo Objects");
-            }
-            return;
-        }
-
-        searchObject.rawSearchResults.put(extractedResults.get("id"), extractedResults);
+        return extractedResults;
     }
 
-
-
-    private String extractJsonFromHTML(String html)
-    {
-        String startTag = "<script id=\"__NEXT_DATA__\" type=\"application/json\">";
-        String endTag = "</script>";
-
-        int startIndex = html.indexOf(startTag) + startTag.length();
-        int endIndex = html.indexOf(endTag, startIndex);
-
-        if(startIndex > startTag.length() && endIndex > startIndex)
-        {
-            return html.substring(startIndex,endIndex);
-        }
-
-        return null;
-    }
 
 
 
@@ -175,22 +199,9 @@ public final class WillhabenScraper extends SiteScraper
 
 
 
-    @Override
-    protected String getCategoryTag()
-    {
-        return ((WillhabenConnector) connector).getCategoryTag();
-    }
 
-    @Override
-    protected String getCssQueryTag()
-    {
-        return ((WillhabenConnector) connector).getCssQueryTag();
-    }
 
-    @Override
-    protected String getPaginationButtonSelector() {
-        return paginationButtonMarker;
-    }
+
 
 
 

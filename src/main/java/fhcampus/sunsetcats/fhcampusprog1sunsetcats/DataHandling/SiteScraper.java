@@ -1,156 +1,245 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats.DataHandling;
 
-import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Search;
-
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Search;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public abstract class SiteScraper
-{
-    private static final Logger Debug = Logger.getLogger(SiteScraper.class.getName());
-    protected final DataConnector connector;
+
+
+public abstract class SiteScraper {
+
+    protected static final Logger Debug = Logger.getLogger(SiteScraper.class.getName());
+
+    protected final WillhabenConnector connector;
     protected final Search searchObject;
 
-    public SiteScraper(DataConnector connector, Search searchObject)
+    protected final String BASE_URL;  //Die Grund URL der Website z.B https://willhaben.at/
+    protected final String DEFAULT_START;
+
+    protected final String categoryTag;  //Tag of current category to search
+    protected final String cssQueryTag;
+    protected final String paginationButtonMarker;
+
+
+    protected final String JsonStartTag;
+    protected final String JsonEndTag;
+
+
+    public SiteScraper (WillhabenConnector connector, Search searchObject, String BASE_URL, String DEFAULT_START,String categoryTag, String cssQueryTag, String paginationButtonMarker, String JsonStartTag,
+                        String JsonEndTag)
     {
         this.connector = connector;
         this.searchObject = searchObject;
+
+        this.BASE_URL = BASE_URL;
+        this.DEFAULT_START = DEFAULT_START;
+
+        this.categoryTag = categoryTag;
+        this.cssQueryTag = cssQueryTag;
+        this.paginationButtonMarker = paginationButtonMarker;
+
+        this.JsonStartTag = JsonStartTag;
+        this.JsonEndTag = JsonEndTag;
     }
 
-    // Main scraping entry point
-    public void start() throws IOException, InterruptedException
-    {
-        String startUrl = searchObject.getSearchStartURL();
-        if (searchObject.continueScrape())
-        {
-            scrapeAllCategories(startUrl);
-        } else
-        {
-            scrapeSearchPages(startUrl);
-        }
-    }
+
+
+    //===================================================================== || ABSTRACT FUNCTIONS || =====================================================================
+
+
+
+    // Abstract methods to be implemented by subclasses
+    public abstract void start();
+
+    protected abstract Optional<JSONArray> validateResponse(HttpResponse<String> response);
+
+    protected abstract HashMap<String,String> extractDataFromResult(org.json.JSONObject currentItem);
+
+    protected abstract void fillSearchObject(ArrayList<JSONObject> resultArray);
+
+
+    //===================================================================== || BASE FUNCTIONS || =====================================================================
+
+
 
     // Scrape all categories
-    private void scrapeAllCategories(String url) throws IOException, InterruptedException
+    protected ArrayList<JSONObject> scrapeAllCategories(String url) throws IllegalArgumentException
     {
-        HttpResponse<String> response = sendRequest(url);
-        if (response == null) return;
+        ArrayList<JSONObject> searchResults = new ArrayList<>();
 
-        scrapeSearchPages(url);
-        Document document = Jsoup.parse(response.body());
+        Optional<HttpResponse<String>> response = sendRequest(url);
+        if (response.isEmpty()) throw new IllegalArgumentException();
+
+        searchResults.addAll(scrapeSearchPages(url));
+
+        Document document = Jsoup.parse(response.get().body());
         for (Element link : document.select(getCssQueryTag()))
         {
-            String categoryUrl = connector.getBaseURL() + link.attr("href");
+            String categoryUrl = getBaseURL() + link.attr("href");
             if (!categoryUrl.contains("javascript") && !categoryUrl.contains("sfId"))
             {
-                scrapeSearchPages(categoryUrl);
+                searchResults.addAll(scrapeSearchPages(categoryUrl));
             }
         }
+
         Debug.severe("No new Categories found!");
+
+        return searchResults;
     }
 
-    // Scrape over all pages of a specific search
-    private void scrapeSearchPages(String url) throws IOException, InterruptedException
+
+
+    // Scrape over all pages of a specific search & return Array of the Results
+    protected ArrayList<JSONObject> scrapeSearchPages(String url) throws IllegalArgumentException
     {
         Debug.info("Currently Scraping those Pages:     " + url);
 
-        if (!url.startsWith(connector.getBaseURL() + getCategoryTag()))
+        if (!url.startsWith(getBaseURL() + getCategoryTag()))
         {
             Debug.info("Invalid category URL: " + url);
-            return;
+            throw new IllegalArgumentException();
         }
 
+        ArrayList<JSONObject> searchResults = new ArrayList<>();
         int count = 0;
+        int itemTotal = 0;
+
         String currentUrl = url;
         while (currentUrl != null)
         {
-            HttpResponse<String> response = sendRequest(currentUrl);
-            if (response == null) break;
+            Optional<HttpResponse<String>> response = sendRequest(currentUrl);
+            if (response.isEmpty()) break;
 
-            Optional<JSONArray> validatedResponse = validateResponse(response);
+            Optional<JSONArray> validatedResponse = validateResponse(response.get());
             if (validatedResponse.isEmpty()) break;
 
-            scrapeSearchResults(validatedResponse.get());
-            currentUrl = getNextPageUrl(response.body());
+            JSONArray pageResults = validatedResponse.get();
+            for (int i = 0; i < pageResults.length(); i++)
+            {
+                searchResults.add(pageResults.getJSONObject(i));
+            }
+
+            currentUrl = getNextPageUrl(response.get().body());
             count++;
+            itemTotal += pageResults.length();
         }
-        Debug.info("Page Count: " + count);
-        Debug.info("Item Total: " + searchObject.rawSearchResults.size());
+
+        Debug.info(String.format("Page Count: %s  Item Total: %s ", count, itemTotal));
+
+        return searchResults;
     }
 
-
-    private void scrapeSearchResults(JSONArray searchResults)
-    {
-        for (int i = 0; i < searchResults.length(); i++)
-        {
-            JSONObject result = searchResults.getJSONObject(i);
-            extractDataFromResult(result);
-        }
-    }
 
 
 
     // Send HTTP request
-    private HttpResponse<String> sendRequest(String url) throws IOException, InterruptedException
-    {
-        HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(url)).GET().build();
-        HttpResponse<String> response = connector.getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() != 200)
-        {
-            Debug.severe("Failed to fetch URL: " + url);
-            return null;
-        }
-        return response;
-    }
-
-    protected String getNextPageUrl(String html)
+    protected Optional<HttpResponse<String>> sendRequest(String url)
     {
         try
         {
-            // Parse the HTML using Jsoup
-            Document document = Jsoup.parse(html);
+            HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(url)).GET().build();
+            HttpResponse<String> response = connector.getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Get the pagination button selector from the child class
-            String paginationSelector = getPaginationButtonSelector();
-
-            // Find the pagination button element
-            Element paginationButton = document.selectFirst(paginationSelector);
-
-            if (paginationButton != null)
+            if (response.statusCode() != 200)
             {
-                // Extract the href attribute and build the next page URL
-                String nextPagePath = paginationButton.attr("href");
-                return connector.getBaseURL() + nextPagePath;
+                Debug.warning("Failed to fetch URL: " + url);
+                return Optional.empty();
             }
-        } catch (Exception e)
+
+            return Optional.of(response);
+        }
+        catch (IOException e)
         {
-            Debug.severe("Error retrieving next page URL: " + e.getMessage());
+            Debug.severe("IO Exception while sending Request " + e.getMessage());
+            return Optional.empty();
+        }
+        catch (InterruptedException e)
+        {
+            Debug.severe("Interruption while sending Request " + e.getMessage());
+            return Optional.empty();
         }
 
-        return null; // No next page found
+    }
+
+
+    // Get URL of the next Result Page
+    protected String getNextPageUrl(String html)
+    {
+        Document document = Jsoup.parse(html);
+        Element paginationButton = document.selectFirst(getPaginationButtonSelector());
+
+        if (paginationButton == null)
+        {
+            Debug.warning("No next Page Found " + html);
+            return null;
+        }
+
+        // Extract the href attribute and build the next page URL
+        String nextPagePath = paginationButton.attr("href");
+        return getBaseURL() + nextPagePath;
     }
 
 
 
-    // Abstract methods for site-specific behavior
+    protected String extractJsonFromHTML(String html)
+    {
+        String startTag = getJsonStartTag();
+        String endTag = getJsonEndTag();
 
-    protected abstract String getPaginationButtonSelector();
+        int startIndex = html.indexOf(startTag) + startTag.length();
+        int endIndex = html.indexOf(endTag, startIndex);
 
-    protected abstract void extractDataFromResult(JSONObject searchResults);
+        if(startIndex > startTag.length() && endIndex > startIndex)
+        {
+            return html.substring(startIndex,endIndex);
+        }
 
-    protected abstract String getCategoryTag();
+        return null;
+    }
 
-    protected abstract String getCssQueryTag();
 
-    protected abstract Optional<JSONArray> validateResponse(HttpResponse<String> response);
+
+    protected String getBaseURL()
+    {
+        return this.BASE_URL;
+    }
+
+    protected String getCategoryTag()
+    {
+        return categoryTag;
+    }
+
+    protected String getCssQueryTag()
+    {
+        return cssQueryTag;
+    }
+
+    protected String getJsonStartTag()
+    {
+        return JsonStartTag;
+    }
+
+    protected String getJsonEndTag()
+    {
+        return JsonEndTag;
+    }
+
+    protected String getPaginationButtonSelector()
+    {
+        return paginationButtonMarker;
+    }
+
+
 
 }

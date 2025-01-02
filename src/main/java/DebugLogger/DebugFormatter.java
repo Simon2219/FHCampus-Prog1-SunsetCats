@@ -29,6 +29,9 @@ public class DebugFormatter extends Formatter {
 
 
         String message = formatMessage(record);
+        message = applyColorTags(message);
+
+
         // Return formatted log message with color and level
         return String.format
                 ("%s[%s.%s] - %-13s: %s %s%n",
@@ -53,7 +56,20 @@ public class DebugFormatter extends Formatter {
         };
     }
 
-
+    /**
+     * Replaces custom color tags in the message with the appropriate ANSI codes.
+     */
+    private String applyColorTags(String message) {
+        return message
+                .replace("{RED}", RED)
+                .replace("{YELLOW}", YELLOW)
+                .replace("{GREEN}", GREEN)
+                .replace("{BLUE}", BLUE)
+                .replace("{CYAN}", CYAN)
+                .replace("{GREY}", GREY)
+                .replace("{WHITE}", WHITE)
+                .replace("{RESET}", RESET);
+    }
 
 }
 

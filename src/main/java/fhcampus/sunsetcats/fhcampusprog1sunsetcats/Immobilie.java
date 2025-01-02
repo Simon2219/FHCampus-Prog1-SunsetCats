@@ -22,12 +22,72 @@ public class Immobilie
         DESCRIPTION("description", String.class),
         IMMO_TYPE("immoType", String.class),
 
+        PRICE("price", Double.class),
+        PRICE_DISPLAY("priceDisplay", String.class),
+        RENT_MONTH("rentperMonth", Double.class),
+        PRICE_SUGGESTION("priceSuggestion", Double.class),
+        PROJECT_UNIT_PRICE_FROM("projectUnitPriceFrom", String.class),
+        PROJECT_UNIT_RENT_FROM("projectUnitRentFrom", String.class),
+
         POSTCODE("postcode", Integer.class),
         DISTRICT("district", String.class),
         ADDRESS("address", String.class),
+        LOCATION("location", String.class),
+        STATE("state", String.class),
+        COUNTRY("country", String.class),
+        COORDINATES("coordinates", String.class),
 
-        PRICE("price", Double.class),
-        PRICE_DISPLAY("priceDisplay", String.class);
+        UNIT_NUMBER("unitNumber", String.class),
+
+        ESTATE_SIZE_TOTAL("estateSizeTotal", Double.class),
+        ESTATE_SIZE_LIVING_AREA("estateSizeLivingArea", Double.class),
+        ESTATE_SIZE_USEABLE_AREA("estateSizeUseableArea", Double.class),
+
+        FREE_AREA_TOTAL("freeAreaTotal", Double.class),
+        FREE_AREA_TYPE("freeAreaType", String.class),
+        FREE_AREA_TYPE_NAME("freeAreaTypeName", String.class),
+
+        NUMBER_OF_ROOMS("numberOfRooms", Integer.class),
+        ROOMS("rooms", Integer.class),
+        FLOOR("floor", Integer.class),
+        NUMBER_OF_CHILDREN("numberOfChildren", Integer.class),
+
+        BODY_DYN("bodyDyn", String.class),
+
+        PROPERTY_TYPE_ID("propertyTypeId", String.class),
+        PROPERTY_TYPE_HOUSE("propertyTypeHouse", String.class),
+        PROPERTY_TYPE_FLAT("propertyTypeFlat", String.class),
+
+        VIRTUAL_VIEW_LINK("virtualViewLink", String.class),
+        IMAGE_DESCRIPTION("imageDescription", String.class),
+        ALL_IMAGE_URLS("allImageUrls", String.class),
+
+        ORGNAME("organizationName", String.class),
+        ORGID("orgId", String.class),
+        ORG_UUID("orgUuid", String.class),
+
+        LOCATION_ID("locationId", String.class),
+        LOCATION_QUALITY("locationQuality", String.class),
+
+        HEADING("heading", String.class),
+        PUBLISHED("published", String.class),
+        PUBLISHED_STRING("publishedString", String.class),
+
+        SEO_URL("seoUrl", String.class),
+        ADID("adId", String.class),
+        ADVERTISER_REF("advertiserRef", String.class),
+        UPSELLING_AD_SEARCHRESULT("upsellingAdSearchResult", String.class),
+
+        ESTATE_PREFERENCE("estatePreference", String.class),
+        CATEGORY_TREE_IDS("categoryTreeIds", String.class),
+        IS_BUMPED("isBumped", String.class),
+        MMO("mmo", String.class),
+        AD_UUID("adUuid", String.class),
+        IS_PRIVATE("isPrivate", String.class),
+        UNIT_TITLE("unitTitle", String.class),
+        AD_SEARCHRESULT_LOGO("adSearchResultLogo", String.class),
+        PROJECT_ID("projectId", String.class);
+
 
         private final String key;
         private final Class<?> type;
@@ -80,8 +140,10 @@ public class Immobilie
 
             attributes.put(key, defaultValue);
 
-            Debug.severe("Value provided for key " + key + " cannot be cast to " + key.getType().getSimpleName()
-                    + ": " + value + ". Using default value: " + defaultValue);
+            if(value == null) { return; }
+
+            Debug.warning("Value provided for Key {RED}" + key + "{WHITE} cannot be cast to {BLUE}" + key.getType().getSimpleName()
+                    + ": " + value + ".{WHITE} Using default value: " + defaultValue);
         }
     }
 

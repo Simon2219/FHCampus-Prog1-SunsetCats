@@ -33,7 +33,8 @@ public class AppMain extends Application
         initializeDebugLogger(); // ! HAS TO RUN FIRST
         //launch();
 
-        //Debug.info("Application started");
+        Debug.info("Application started");
+
         runSearch();
     }
 
@@ -44,8 +45,8 @@ public class AppMain extends Application
             Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote?sfId=4d397651-95f3-402c-8fd4-8eb4c15d49a8&isNavigation=true&rows=30&areaId=900&NO_OF_ROOMS_BUCKET=5X5",
              false );
 
-            // Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/",
-                    // true);
+            //Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/",
+                     //true);
 
             //Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/");
 
@@ -58,18 +59,17 @@ public class AppMain extends Application
         }
         catch (IllegalStateException emptyResults)
         {
-            Debug.severe("APPMAIN: SearchResults were empty!");
+            Debug.severe("SearchResults were empty!");
             Debug.info(emptyResults.getMessage());
         }
         catch (IllegalArgumentException e)
         {
-            Debug.severe("APPMAIN: Wrong URL Format");
-            Debug.warning("THIS is a WARNING");
+            Debug.severe("Wrong URL Format");
             Debug.info(e.getMessage());
         }
         catch (Exception e)
         {
-            Debug.severe("APPMAIN: Unexpected error during search!");
+            Debug.severe("Unexpected error during search!");
             Debug.info(e.getMessage());
         }
     }
@@ -79,10 +79,14 @@ public class AppMain extends Application
     {
         for (Immobilie currentImmobilie : searchResults)
         {
-            System.out.printf("ID: %s  -  %s %s", currentImmobilie.getAttribute(Immobilie.AttributeKey.ID), currentImmobilie.getAttribute(Immobilie.AttributeKey.DESCRIPTION), System.lineSeparator());
+            Double immoPrice = currentImmobilie.getAttribute(Immobilie.AttributeKey.PRICE);
+            Debug.info(String.format("ID: %s | PRICE: %f  -  %s", currentImmobilie.getAttribute(Immobilie.AttributeKey.ID),
+                    immoPrice, currentImmobilie.getAttribute(Immobilie.AttributeKey.DESCRIPTION)));
         }
         System.out.println(searchResults.size());
     }
+
+
 
 
 
