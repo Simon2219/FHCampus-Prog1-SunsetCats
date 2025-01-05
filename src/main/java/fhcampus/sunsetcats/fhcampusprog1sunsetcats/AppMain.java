@@ -15,13 +15,13 @@ import java.util.logging.*;
 public class AppMain extends Application
 {
 
-    private static final WillhabenConnector willhabenConnector = new WillhabenConnector();
+    static final WillhabenConnector willhabenConnector = new WillhabenConnector();
     private static final Logger Debug = Logger.getLogger(AppMain.class.getName());
 
     @Override
     public void start(Stage stage) throws IOException
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppMain.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(AppMain.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         stage.setTitle("JavaFX Demo - Sunset Cats Immobilien");
         stage.setScene(scene);
@@ -31,11 +31,11 @@ public class AppMain extends Application
     public static void main(String[] args)
     {
         initializeDebugLogger(); // ! HAS TO RUN FIRST
-        //launch();
+        launch();
 
-        Debug.info("Application started");
+        //Debug.info("Application started");
 
-        runSearch();
+        //runSearch();
     }
 
     private static void runSearch()
