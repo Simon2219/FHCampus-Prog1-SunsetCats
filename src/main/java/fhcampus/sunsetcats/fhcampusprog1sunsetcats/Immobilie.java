@@ -1,9 +1,10 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.logging.Logger;
 
-public class Immobilie
+public class Immobilie implements Serializable
 {
 
     private static final Logger Debug = Logger.getLogger(Immobilie.class.getName());

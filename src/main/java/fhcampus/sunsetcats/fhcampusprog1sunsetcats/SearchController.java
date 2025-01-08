@@ -2,6 +2,8 @@ package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -11,8 +13,16 @@ public class SearchController {
     @FXML
     private Button startSearch;
 
+    @FXML
+    private Button goBack;
+
+    @FXML
+    private VBox resultArea;
+
     public void initialize() {
         startSearch.setOnAction(_ -> startSearch.setOnMouseClicked(_ -> startSearch()));
+        goBack.setOnAction(_ -> goBack.setOnMouseClicked(_ -> Navigation.loadMain(goBack)));
+        Navigation.loadContentToArea(resultArea,"result-view.fxml");
     }
 
     private void startSearch() {
@@ -21,8 +31,7 @@ public class SearchController {
         ArrayList<Immobilie> results = willhabenConnector.startSearch(searchImmo);
         printResults(results);
         ResultStore.getInstance().setSearchResults(results);
-
-        UIController.getInstance().loadContent("result-view.fxml");
+        Navigation.loadContentToArea(resultArea,"result-view.fxml");
     }
 
     private static final Logger Debug = Logger.getLogger(AppMain.class.getName());

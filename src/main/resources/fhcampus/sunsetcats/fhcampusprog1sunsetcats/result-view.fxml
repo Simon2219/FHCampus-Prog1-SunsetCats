@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.ResultController">
-   <Text fx:id="numOfResults" layoutX="192.0" layoutY="9.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="215.27952575683594" />
-    <ListView fx:id="resultListView" layoutY="37.0" prefHeight="363.0" prefWidth="600.0" />
-   <Text fx:id="errorText" fill="#940505" layoutX="116.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="367.4286346435547">
-      <font>
-         <Font size="29.0" />
-      </font>
-   </Text>
+<AnchorPane prefHeight="500.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.ResultController">
+   <VBox alignment="CENTER" prefHeight="524.0" prefWidth="590.0" spacing="30.0">
+      <Text fx:id="statusText" fill="#940505" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="367.4286346435547">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Text>
+      <Button fx:id="loadPreviousResults" mnemonicParsing="false" text="Button" />
+   </VBox>
+   <VBox>
+      <Text fx:id="numOfResults" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="215.27952575683594">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <ListView fx:id="resultListView" prefHeight="500.0" prefWidth="590.0" stylesheets="@style.css" VBox.vgrow="ALWAYS" />
+   </VBox>
 </AnchorPane>

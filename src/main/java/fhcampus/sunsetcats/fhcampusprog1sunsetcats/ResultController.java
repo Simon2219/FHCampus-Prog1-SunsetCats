@@ -3,24 +3,47 @@ package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
+import javafx.event.EventHandler;
+import javafx.scene.layout.VBox;
 
 public class ResultController {
     @FXML
     private ListView<Immobilie> resultListView;
 
     @FXML
-    private Text errorText;
+    private Text statusText;
 
     @FXML
     private Text numOfResults;
 
+    @FXML
+    private Button loadPreviousResults;
+
     public void initialize() {
         if (!ResultStore.getInstance().getSearchResults().isEmpty()) {
-            numOfResults.setText(ResultStore.getInstance().getSearchResults().size() + " results found.");
+            numOfResults.setText(ResultStore.getInstance().getSearchResults().size() + " Ergebnisse gefunden.");
             resultListView.getItems().addAll(ResultStore.getInstance().getSearchResults());
             resultListView.setCellFactory(param -> new ResultListCell());
+
         } else {
-            errorText.setText("No results available yet, please start a search first!");
+            resultListView.setVisible(false);
+            resultListView.setManaged(false);
+            statusText.setText("Noch keine Ergebnisse - bitte starten Sie zuerst eine Suche!");
+            loadPreviousResults.setText("Letzte Ergebnisse laden");
         }
+
+        loadPreviousResults.setOnAction(_ -> {
+            System.out.println("Click registered");
+            ResultStore.getInstance().getPreviousResults();
+        });
+
+        resultListView.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                Immobilie currentItem = resultListView.getSelectionModel().getSelectedItem();
+                UIController.getInstance().loadContent("immo-view.fxml");
+            }
+        });
     }
 }

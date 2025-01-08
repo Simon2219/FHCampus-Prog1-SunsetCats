@@ -2,17 +2,22 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.WelcomeController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.WelcomeController">
 
-    <VBox alignment="CENTER" layoutX="-7.0" layoutY="58.0" prefHeight="0.0" prefWidth="336.0" />
-
-    <Label layoutX="246.0" layoutY="58.0" style="-fx-font-size: 24px;" text="Welcome!">
-      <font>
-         <Font size="30.0" />
-      </font></Label>
-    <Button fx:id="newSearch" layoutX="229.0" layoutY="177.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="141.0" text="Start new search" />
+    <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="50.0">
+      <children>
+         <ImageView fx:id="logo" fitWidth="400" pickOnBounds="true" preserveRatio="true" />
+      
+          <Label fx:id="welcomeText" style="-fx-font-size: 24px;" text="Lorem ipsum dolor sit amet">
+            <font>
+               <Font name="DejaVu Sans Bold" size="38.0" />
+            </font>
+         </Label>
+          <Button fx:id="newSearch" mnemonicParsing="false" prefHeight="45.0" text="consetetur" />
+      </children></VBox>
 </AnchorPane>

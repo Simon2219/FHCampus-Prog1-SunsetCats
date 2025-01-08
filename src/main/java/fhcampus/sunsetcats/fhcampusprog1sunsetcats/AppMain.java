@@ -22,8 +22,8 @@ public class AppMain extends Application
     public void start(Stage stage) throws IOException
     {
         FXMLLoader fxmlLoader = new FXMLLoader(AppMain.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-        stage.setTitle("JavaFX Demo - Sunset Cats Immobilien");
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("Sunset Cats Immobilien");
         stage.setScene(scene);
         stage.show();
     }
@@ -86,12 +86,6 @@ public class AppMain extends Application
         System.out.println(searchResults.size());
     }
 
-
-
-
-
-
-
     private static void initializeDebugLogger() {
         try (InputStream inputStream = AppMain.class.getClassLoader().getResourceAsStream("logging.properties")) {
             if (inputStream == null) {
@@ -136,6 +130,4 @@ public class AppMain extends Application
             e.printStackTrace();
         }
     }
-
-
 }

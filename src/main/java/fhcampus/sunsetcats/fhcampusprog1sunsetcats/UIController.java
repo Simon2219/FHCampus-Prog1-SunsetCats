@@ -8,20 +8,11 @@ import javafx.util.Callback;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
 import java.io.IOException;
 
-public class UIController
-{
-    // Set Controller as singleton to call menu items from other Controllers
-    private static UIController instance;
-    public UIController() {
-        instance = this;
-    }
-    public static UIController getInstance() {
-        return instance;
-    }
-
+public class UIController {
     @FXML
     private Label welcomeText;
 
@@ -31,32 +22,28 @@ public class UIController
     @FXML
     private ListView<String> menuListView;
 
+    @FXML
+    private Button imprint;
+
     // Initialize the controller
-    public void initialize()
-    {
+    public void initialize() {
         displayWelcome();
 
         // Add items to the ListView
-        menuListView.getItems().addAll("Welcome", "Search", "Show Results", "Show Map");
+        menuListView.getItems().addAll("Start", "Suche", "Letzte Ergebnisse", "Karte", "Suche 2");
 
         // Customize the cell factory to center-align the text
-        menuListView.setCellFactory(new Callback<>()
-        {
+        menuListView.setCellFactory(new Callback<>() {
             @Override
-            public ListCell<String> call(ListView<String> listView)
-            {
-                return new ListCell<>()
-                {
+            public ListCell<String> call(ListView<String> listView) {
+                return new ListCell<>() {
                     @Override
-                    protected void updateItem(String item, boolean empty)
-                    {
+                    protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
 
-                        if (empty || item == null)
-                        {
+                        if (empty || item == null) {
                             setText(null);
-                        } else
-                        {
+                        } else {
                             setText(item);
                             setStyle("-fx-alignment: center;"); // Center-align the text
                         }
@@ -68,84 +55,90 @@ public class UIController
         // Add selection handling for clicks on list items
         menuListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
-            if (newValue != null)
-            {
+            if (newValue != null) {
                 handleMenuClick(newValue);
             }
         });
     }
 
     // Handles menu item selection
-    private void handleMenuClick(String menuItem)
-    {
-        switch (menuItem)
-        {
-            case "Welcome":
+    private void handleMenuClick(String menuItem) {
+        switch (menuItem) {
+            case "Start":
                 displayWelcome();
                 break;
-            case "Show Results":
+            case "Letzte Ergebnisse":
                 displayResults();
                 break;
-            case "Show Map":
+            case "Karte":
                 displayMap();
                 break;
-            case "Search":
+            case "Suche":
                 displaySearch();
                 break;
+            case "Suche 2":
+                displaySearch2();
+                break;
             default:
-                welcomeText.setText("Unknown menu action.");
+                System.out.println("Unknown menu action.");
                 break;
         }
     }
 
     // Methods for menu actions
-    public void displayResults()
-    {
-        loadContent("result-view.fxml");
+    private void displayResults() {
+        Navigation.loadContentToArea(dynamicContentArea, "result-view.fxml");
     }
 
-    private void displayMap()
-    {
-        loadContent("map-view.fxml");
+    private void displayMap() {
+        Navigation.loadContentToArea(dynamicContentArea, "map-view.fxml");
     }
 
-    private void displaySearch()
-    {
-        loadContent("search-view.fxml");
+    private void displaySearch() {
+        Navigation.loadScene(imprint,"search-view.fxml");
+    }
+
+    private void displaySearch2() {
+        Navigation.loadContentToArea(dynamicContentArea, "search-view.fxml");
+        Stage stage = (Stage) dynamicContentArea.getScene().getWindow();
+        stage.sizeToScene();
     }
 
     private void displayWelcome() {
-        loadContent("welcome-view.fxml");
+        Navigation.loadContentToArea(dynamicContentArea, "welcome-view.fxml");
     }
+
+
 
     // Methods for button actions
     @FXML
-    private void onOption1Click()
-    {
+    private void displayImprint() {
+        Navigation.loadContentToArea(dynamicContentArea,"imprint-view.fxml");
+    }
+
+    @FXML
+    private void onOption1Click() {
         welcomeText.setText("Option 1 Selected: Performing Action...");
     }
 
     @FXML
-    private void onOption2Click()
-    {
+    private void onOption2Click() {
         welcomeText.setText("Option 2 Selected: Performing Action...");
     }
 
     @FXML
-    private void onOption3Click()
-    {
+    private void onOption3Click() {
         welcomeText.setText("Option 3 Selected: Performing Action...");
     }
 
 
     @FXML
-    private void onMainActionClick()
-    {
+    private void onMainActionClick() {
         welcomeText.setText("Option 3 Selected: Performing Action...");
     }
 
 
-    // Helper method to load FXML files
+    // Helper method to load FXML files from menu
     void loadContent(String fxmlFile) {
         try {
             Pane content = FXMLLoader.load(getClass().getResource(fxmlFile));
@@ -154,5 +147,16 @@ public class UIController
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Set Controller as singleton to call menu items from other Controllers
+    private static UIController instance;
+
+    public UIController() {
+        instance = this;
+    }
+
+    public static UIController getInstance() {
+        return instance;
     }
 }

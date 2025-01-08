@@ -1,74 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.UIController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.UIController">
 
-    <!-- Filter-Bereich auf der linken Seite -->
+    <!-- Left Menu Section -->
     <left>
-        <VBox prefWidth="300" spacing="15" style="-fx-background-color: #F4F4F4; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
+        <VBox alignment="CENTER" prefWidth="200" spacing="10" style="-fx-background-color: #F0F0F0;">
             <padding>
-                <Insets bottom="20" left="20" right="20" top="20" />
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <!-- Titel für den Filterbereich -->
-            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Filter" />
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Menu" />
+            <ListView fx:id="menuListView" prefHeight="200" />
 
-            <!-- Suchfeld für Schlagwörter -->
-            <TextField fx:id="searchField" promptText="🔍 Keywords eingeben" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+            <!-- Spacer to push buttons to the bottom -->
+            <Region VBox.vgrow="ALWAYS" />
 
-            <!-- Typ der Immobilie -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Immobilientyp:" />
-            <CheckBox style="-fx-font-size: 14px;" text="Wohnung" />
-            <CheckBox style="-fx-font-size: 14px;" text="Haus" />
-            <CheckBox style="-fx-font-size: 14px;" text="Reihenhaus" />
-
-            <!-- Standort -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Standort:" />
-            <TextField promptText="Standort" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-
-            <!-- Preis -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Preis bis (in €):" />
-            <TextField prefWidth="100" promptText="max" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-
-            <!-- Anzahl der Räume -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Zimmer:" />
-            <TextField prefWidth="100" promptText="Anzahl" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-
-            <!-- Fläche -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
-            <HBox spacing="10">
-                <TextField prefWidth="100" promptText="min" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-                <TextField prefWidth="100" promptText="max" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-            </HBox>
-
-            <!-- Miete oder Eigentum -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Art:" />
-            <RadioButton fx:id="radioMiete" style="-fx-font-size: 14px;" text="Miete" />
-            <RadioButton fx:id="radioEigentum" style="-fx-font-size: 14px;" text="Eigentum" />
+            <Button fx:id="imprint" maxWidth="Infinity" onAction="#displayImprint" text="Impressum" />
+            <Button maxWidth="Infinity" onAction="#onOption2Click" text="Option 2" />
+            <Button maxWidth="Infinity" onAction="#onOption3Click" text="Option 3" />
         </VBox>
     </left>
 
-    <!-- Ergebnisse auf der rechten Seite -->
-    <center>
-        <VBox spacing="15.0">
-            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Suchergebnisse" />
 
-            <HBox prefHeight="680.0" prefWidth="600" spacing="15" style="-fx-background-color: #FFFFFF; -fx-padding: 20; -fx-border-color: #CCCCCC; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
-                <padding>
-                    <Insets bottom="10" left="10" right="10" top="10" />
-                </padding>
-            </HBox>
-         <padding>
-            <Insets bottom="11.0" left="11.0" right="11.0" top="11.0" />
-         </padding>
+    <!-- Main Display Section -->
+    <center>
+        <VBox fx:id="dynamicContentArea" alignment="CENTER" maxHeight="+Infinity" spacing="20" style="-fx-background-color: #FFFFFF;" VBox.vgrow="always">
+            <!-- Dynamic content will load here! -->
         </VBox>
     </center>
 
