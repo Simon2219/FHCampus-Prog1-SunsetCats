@@ -14,7 +14,7 @@
             <Font size="29.0" />
          </font>
       </Text>
-      <Button fx:id="loadPreviousResults" mnemonicParsing="false" text="Button" />
+      <Button fx:id="loadPreviousResults" mnemonicParsing="false" text="Button" visible="false"/>
    </VBox>
    <VBox>
       <Text fx:id="numOfResults" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="215.27952575683594">

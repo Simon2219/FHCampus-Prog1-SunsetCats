@@ -8,6 +8,8 @@ import javafx.scene.control.*;
 import javafx.event.EventHandler;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
+
 public class ResultController {
     @FXML
     private ListView<Immobilie> resultListView;
@@ -31,11 +33,13 @@ public class ResultController {
             resultListView.setVisible(false);
             resultListView.setManaged(false);
             statusText.setText("Noch keine Ergebnisse - bitte starten Sie zuerst eine Suche!");
-            loadPreviousResults.setText("Letzte Ergebnisse laden");
+            if (new File("previous-results.ser").isFile()) {
+                loadPreviousResults.setVisible(true);
+                loadPreviousResults.setText("Letzte Ergebnisse laden");
+            }
         }
 
         loadPreviousResults.setOnAction(_ -> {
-            System.out.println("Click registered");
             ResultStore.getInstance().getPreviousResults();
         });
 
