@@ -10,16 +10,20 @@ public class WelcomeController {
     @FXML
     public Label welcomeText;
     @FXML
-    private Button newSearch;
+    private Button goToSearch;
     @FXML
     private ImageView logo;
 
     public void initialize() {
         welcomeText.setText("Wilkommen bei der Sunset Cats Immobiliensuche!");
-        newSearch.setOnAction(_ -> Navigation.loadScene(newSearch,"search-view.fxml"));
-        newSearch.setText("Starten Sie ihre erste Suche!");
+        goToSearch.setText("Starten Sie ihre erste Suche!");
 
-        Image logoFile = new Image(getClass().getResource("SunsetCats_Logo_RotGelb.gif").toExternalForm());
+        Image logoFile = new Image(getClass().getResource("SunsetCats_Logo_Web_RotGelb.png").toExternalForm());
         logo.setImage(logoFile);
+    }
+
+    @FXML
+    private void displaySearch() {
+        UIController.getInstance().displaySearch();
     }
 }

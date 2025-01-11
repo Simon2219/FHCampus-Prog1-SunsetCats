@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.SearchController">
+<BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.SearchController">
 
     <!-- Filter-Bereich auf der linken Seite -->
     <left>
@@ -56,10 +56,10 @@
             <RadioButton fx:id="radioEigentum" style="-fx-font-size: 14px;" text="Eigentum" />
          <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">
             <children>
-               <HBox prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+               <HBox prefHeight="100.0" prefWidth="200.0" spacing="65.0">
                   <children>
                      <Button fx:id="resetFilters" mnemonicParsing="false" text="Zurücksetzen" />
-                     <Button fx:id="startSearch" mnemonicParsing="false" text="Suche starten" />
+                     <Button fx:id="startSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" />
                   </children>
                </HBox>
             </children>
@@ -71,12 +71,7 @@
     <center>
         <VBox spacing="15.0">
             <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Suchergebnisse" />
-         <VBox fx:id="resultArea" prefHeight="673.0" prefWidth="600.0" />
-         <HBox alignment="BOTTOM_RIGHT" prefHeight="0.0" prefWidth="600.0">
-            <children>
-               <Button fx:id="goBack" mnemonicParsing="false" text="Zurück" />
-            </children>
-         </HBox>
+         <VBox fx:id="resultArea" prefHeight="734.0" prefWidth="600.0" />
             <padding>
                 <Insets bottom="11.0" left="11.0" right="11.0" top="11.0" />
             </padding>

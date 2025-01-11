@@ -18,6 +18,6 @@
                <Font name="DejaVu Sans Bold" size="38.0" />
             </font>
          </Label>
-          <Button fx:id="newSearch" mnemonicParsing="false" prefHeight="45.0" text="consetetur" />
+          <Button fx:id="goToSearch" mnemonicParsing="false" onAction="#displaySearch" prefHeight="45.0" stylesheets="@style.css" text="consetetur" />
       </children></VBox>
 </AnchorPane>

@@ -20,11 +20,10 @@ public class SearchController {
     private VBox resultArea;
 
     public void initialize() {
-        startSearch.setOnAction(_ -> startSearch.setOnMouseClicked(_ -> startSearch()));
-        goBack.setOnAction(_ -> goBack.setOnMouseClicked(_ -> Navigation.loadMain(goBack)));
         Navigation.loadContentToArea(resultArea,"result-view.fxml");
     }
 
+    @FXML
     private void startSearch() {
         Search searchImmo = new Search("https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote?sfId=4d397651-95f3-402c-8fd4-8eb4c15d49a8&isNavigation=true&rows=30&areaId=900&NO_OF_ROOMS_BUCKET=5X5",
                 false );
