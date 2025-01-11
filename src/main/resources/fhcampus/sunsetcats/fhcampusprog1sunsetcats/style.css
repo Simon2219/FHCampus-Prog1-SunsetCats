@@ -5,3 +5,46 @@
     -fx-padding:0;
 }
 
+.button {
+    -fx-font: 14px "System";
+    -fx-padding: 10;
+    -fx-background-color: #dafe45;
+    -fx-border-color: #000000;
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+    -fx-background-radius: 50;
+}
+
+.button:hover {
+    -fx-background-color: #dafecf;
+}
+
+.menu-button {
+    -fx-font: 16px "System";
+    -fx-max-width: 150;
+}
+
+.menu-button:hover {
+    -fx-background-color: #dafecf;
+}
+
+.menu {
+    -fx-max-width: 200;
+}
+
+.check-box .box {
+    -fx-background-color: #dafe45;
+    -fx-border-color: #000000;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #e42821;
+}
+
+/*
+gelb: #dafe45
+hover gelb: #dafecf
+rot: #e42821
+*/

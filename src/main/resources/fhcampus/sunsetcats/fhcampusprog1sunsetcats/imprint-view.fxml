@@ -6,6 +6,6 @@
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="239.0" prefWidth="387.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextArea editable="false" prefHeight="239.0" prefWidth="398.0" styleClass="©" text="Made in 2024/2025 by&#10;&#10;Anna &#10;Fabian Klar&#10;Katja Vymyslicky&#10;Simon Federmann" />
+      <TextArea editable="false" prefHeight="239.0" prefWidth="398.0" styleClass="©" text="Made for CSDC in 2024/2025 by&#10;&#10;Anna Berthold &#10;Fabian Klar&#10;Katja Vymyslicky&#10;Simon Federmann" />
    </children>
 </HBox>
