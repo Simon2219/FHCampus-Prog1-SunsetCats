@@ -77,7 +77,6 @@ public class ImmoDetailController {
 
             // TODO
             // weitere Details
-
         }
     }
 }
