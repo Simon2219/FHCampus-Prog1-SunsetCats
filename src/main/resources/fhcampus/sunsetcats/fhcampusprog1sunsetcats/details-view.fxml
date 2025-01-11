@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="779.0" prefWidth="922.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.ImmoDetailController">
+   <left>
+      <VBox prefWidth="300" spacing="15" style="-fx-background-color: #F4F4F4; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
+         <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+         </padding>
+         <children>
+            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Details" />
+            <Label layoutX="21.0" layoutY="119.0" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Keywords:" />
+            <Label layoutX="21.0" layoutY="134.0" text="Selected Keywords" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Immobilientyp:" />
+            <Label fx:id="labelId" />
+            <Label fx:id="labelImmoType" text="Selected Type" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Standort:" />
+            <Label fx:id="labelLocation" text="Location" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Preis (in €):" />
+            <Label fx:id="labelPrice" text="Price" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Zimmer:" />
+            <Label fx:id="labelNumberOfRooms" text="Number of rooms" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
+            <Label fx:id="labelEstateSize" text="Estate size" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Art:" />
+            <Label text="Type" />
+            <Label fx:id="labelFloor" layoutX="21.0" layoutY="498.0" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Stockwerk:" />
+            <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+                     <children>
+                        <Button fx:id="goBack" mnemonicParsing="false" text="Zurück" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox spacing="15.0">
+         <padding>
+            <Insets bottom="11.0" left="11.0" right="11.0" top="11.0" />
+         </padding>
+         <children>
+            <Label fx:id="labelHeading" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Heading" />
+            <ScrollPane prefHeight="673.0" prefWidth="200.0">
+               <content>
+                  <VBox fx:id="resultArea" prefHeight="673.0" prefWidth="600.0">
+                     <children>
+                        <ImageView fx:id="imageView" fitHeight="300.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+                        <FlowPane prefHeight="31.0" prefWidth="600.0">
+                           <children>
+                              <Label fx:id="labelPublished" text="Veröffentlicht: " />
+                              <Label text="Published" />
+                           </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="labelDescription" text="Description Text" />
+                           </children></FlowPane>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
