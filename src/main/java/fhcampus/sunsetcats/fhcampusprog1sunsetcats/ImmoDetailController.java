@@ -2,6 +2,7 @@ package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
 import fhcampus.sunsetcats.fhcampusprog1sunsetcats.DataHandling.WillhabenConnector;
 import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Immobilie;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -40,17 +41,18 @@ public class ImmoDetailController {
     private ImageView imageView; // Deklaration des ImageView
 
     public void setImmobilie(Immobilie immobilie) {
-        this.immobilie = immobilie;
+        this.immobilie = ResultStore.getInstance().getSelectedImmo();
+        System.out.println("Immobilie " + immobilie + " selected");
         updateDetails();
     }
 
-    @FXML
     public void initialize() {
-        // Action für den Zurück-Button
-        goBack.setOnAction(event -> {
-            // Navigation zurück zur Suchergebnisseite
-            Navigation.loadScene(goBack, "result-view.fxml");
-        });
+        this.immobilie = ResultStore.getInstance().getSelectedImmo();
+        updateDetails();
+    }
+
+    public void goBack(ActionEvent event) {
+        Navigation.loadContent("search-view.fxml");
     }
 
     private void updateDetails() {

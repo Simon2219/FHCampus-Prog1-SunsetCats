@@ -41,7 +41,7 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="100.0">
                      <children>
-                        <Button fx:id="goBack" mnemonicParsing="false" text="Zurück" />
+                        <Button fx:id="goBack" onAction="#goBack" mnemonicParsing="false" text="Zurück" />
                      </children>
                   </HBox>
                </children>

@@ -1,6 +1,8 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -11,53 +13,34 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 public class Navigation {
-    // Load the main screen from any window - button reference is used to find the current stage
-    static void loadMain(Button button) {
+    // Load fxml to the main area (dynamicContentArea)
+    static void loadContent(String fxmlFile) {
+        UIController.getInstance().loadContent(fxmlFile);
+    }
+
+    // Load fxml into the area where an action is performed
+    static void loadContentToCurrentVBOX(javafx.event.ActionEvent event, String fxmlFile) {
         try {
-            FXMLLoader fxml = new FXMLLoader(Navigation.class.getResource("main-view.fxml"));
-            Parent root = fxml.load();
-            Stage stage = (Stage) button.getScene().getWindow();
-            Scene mainScene = new Scene(root);
-            stage.setScene(mainScene);
+            Button sourceButton = (Button) event.getSource();
+            VBox parentVBox = (VBox) sourceButton.getParent();
+            FXMLLoader loader = new FXMLLoader(Navigation.class.getResource(fxmlFile));
+            Node newContent = loader.load();
+            parentVBox.getChildren().clear();
+            parentVBox.getChildren().add(newContent);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Specify a specific scene to be loaded - button reference is used to find the current stage
-    static void loadScene(Button button, String fxmlFile) {
-        try {
-            FXMLLoader fxml = new FXMLLoader(Navigation.class.getResource(fxmlFile));
-            Parent root = fxml.load();
-            Stage stage = (Stage) button.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Load fxml into specified VBOX
-    static void loadContentToArea(VBox pane, String fxmlFile) {
+    // Load fxml into specified child VBox
+    static void loadContentToArea(VBox vbox, String fxmlFile) {
         try {
             Pane content = FXMLLoader.load(Navigation.class.getResource(fxmlFile));
-            pane.getChildren().clear();
-            pane.getChildren().add(content);
+            vbox.getChildren().clear();
+            vbox.getChildren().add(content);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    static void loadImmoDetail(VBox pane, String fxmlFile, Immobilie immo) {
-        try {
-            Pane content = FXMLLoader.load(Navigation.class.getResource("immo-view.fxml"));
-            pane.getChildren().clear();
-            pane.getChildren().add(content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Load object details
-    // TODO
 }

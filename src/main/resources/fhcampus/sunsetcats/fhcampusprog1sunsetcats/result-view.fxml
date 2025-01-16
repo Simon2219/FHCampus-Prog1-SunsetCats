@@ -7,21 +7,21 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="500.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.ResultController">
-   <VBox alignment="CENTER" prefHeight="524.0" prefWidth="590.0" spacing="30.0">
+<AnchorPane prefHeight="500.0" prefWidth="550.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.ResultController">
+   <VBox fx:id="resultsEmpty" alignment="CENTER" prefHeight="524.0" prefWidth="590.0" spacing="30.0">
       <Text fx:id="statusText" fill="#940505" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="367.4286346435547">
          <font>
             <Font size="29.0" />
          </font>
       </Text>
-      <Button fx:id="loadPreviousResults" mnemonicParsing="false" text="Button" visible="false"/>
+      <Button fx:id="loadPreviousResults" mnemonicParsing="false" onAction="#loadPrevResults" text="Button"/>
    </VBox>
-   <VBox>
+   <VBox fx:id="resultsExist" prefHeight="650.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <Text fx:id="numOfResults" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="215.27952575683594">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <ListView fx:id="resultListView" prefHeight="500.0" prefWidth="590.0" stylesheets="@style.css" VBox.vgrow="ALWAYS" />
+      <ListView fx:id="resultListView" VBox.vgrow="ALWAYS" />
    </VBox>
 </AnchorPane>

@@ -7,6 +7,7 @@ import java.util.List;
 public class ResultStore {
     private static ResultStore instance;
     private List<Immobilie> searchResults;
+    private Immobilie selectedImmo;
 
     private ResultStore() {
         searchResults = new ArrayList<>();
@@ -19,6 +20,8 @@ public class ResultStore {
         return instance;
     }
 
+    // Get and set the result list
+
     public List<Immobilie> getSearchResults() {
         return searchResults;
     }
@@ -28,10 +31,7 @@ public class ResultStore {
         serializeResults(results, "previous-results.ser");
     }
 
-    public void getPreviousResults() {
-        this.searchResults = deserializeResults("previous-results.ser");
-        UIController.getInstance().loadContent("result-view.fxml");
-    }
+    // (De)Serialization for result lists
 
     private static void serializeResults(List<Immobilie> results, String filename) {
         try (FileOutputStream fos = new FileOutputStream (filename);
@@ -43,12 +43,24 @@ public class ResultStore {
     }
 
     public static List<Immobilie> deserializeResults(String filename) {
-        try (FileInputStream fis = new FileInputStream (filename);
-             ObjectInputStream ois = new ObjectInputStream (fis)) {
+        try (FileInputStream fis = new FileInputStream(filename);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
             return (List<Immobilie>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public void getPreviousResults() {
+        this.searchResults = deserializeResults("previous-results.ser");
+    }
+    // Get and set the selected object for the detailed view
+
+    public Immobilie getSelectedImmo() {
+        return selectedImmo;
+    }
+
+    public void setSelectedImmo(Immobilie selectedImmo) {
+        this.selectedImmo = selectedImmo;
+    }
 }

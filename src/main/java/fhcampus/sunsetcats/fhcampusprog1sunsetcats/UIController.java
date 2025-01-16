@@ -1,5 +1,6 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -17,7 +18,7 @@ public class UIController {
     private Label welcomeText;
 
     @FXML
-    private VBox dynamicContentArea;
+    VBox dynamicContentArea;
 
     @FXML
     private Button imprint;
@@ -47,24 +48,24 @@ public class UIController {
     // Methods for menu actions
     @FXML
     private void displayResults() {
-        Navigation.loadContentToArea(dynamicContentArea, "result-view.fxml");
+        Navigation.loadContent("result-view.fxml");
     }
 
     @FXML
     void displaySearch() {
-        Navigation.loadContentToArea(dynamicContentArea, "search-view.fxml");
+        Navigation.loadContent("search-view.fxml");
         Stage stage = (Stage) dynamicContentArea.getScene().getWindow();
         stage.sizeToScene();
     }
 
     @FXML
     private void displayImprint() {
-        Navigation.loadContentToArea(dynamicContentArea,"imprint-view.fxml");
+        Navigation.loadContent("imprint-view.fxml");
     }
 
     @FXML
     private void displayWelcome() {
-        Navigation.loadContentToArea(dynamicContentArea, "welcome-view.fxml");
+        Navigation.loadContent("welcome-view.fxml");
     }
 
     @FXML
@@ -72,7 +73,17 @@ public class UIController {
         javafx.application.Platform.exit();
     }
 
-    // Helper method to load FXML files from menu
+    // HELPER METHODS FOR NAVIGATION
+    // Set Controller as singleton to from other Controllers
+    private static UIController instance;
+    public UIController() {
+        instance = this;
+    }
+    public static UIController getInstance() {
+        return instance;
+    }
+
+    // Helper method to load FXML files to the main content area
     void loadContent(String fxmlFile) {
         try {
             Pane content = FXMLLoader.load(getClass().getResource(fxmlFile));
@@ -81,16 +92,5 @@ public class UIController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    // Set Controller as singleton to call menu items from other Controllers
-    private static UIController instance;
-
-    public UIController() {
-        instance = this;
-    }
-
-    public static UIController getInstance() {
-        return instance;
     }
 }

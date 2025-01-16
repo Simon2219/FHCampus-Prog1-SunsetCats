@@ -14,9 +14,6 @@ public class SearchController {
     private Button startSearch;
 
     @FXML
-    private Button goBack;
-
-    @FXML
     private VBox resultArea;
 
     public void initialize() {

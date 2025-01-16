@@ -23,7 +23,7 @@
             <children>
                <Button fx:id="welcome" mnemonicParsing="false" onAction="#displayWelcome" styleClass="menu-button" text="Startseite" />
                   <Button fx:id="search" onAction="#displaySearch" styleClass="menu-button" text="Suche" />
-                  <Button fx:id="results" onAction="#displayResults" styleClass="menu-button" text="Ergebnisse" />
+                  <Button fx:id="results" onAction="#displayResults" styleClass="menu-button" text="Letzte Ergebnisse" visible="false"/>
             </children>
          </VBox>
          <Region prefHeight="200.0" />
