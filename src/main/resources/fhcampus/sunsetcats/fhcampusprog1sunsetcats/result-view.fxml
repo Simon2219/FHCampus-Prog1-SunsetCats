@@ -16,7 +16,7 @@
       </Text>
       <Button fx:id="loadPreviousResults" mnemonicParsing="false" onAction="#loadPrevResults" text="Button"/>
    </VBox>
-   <VBox fx:id="resultsExist" prefHeight="650.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <VBox fx:id="resultsExist" prefHeight="750.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <Text fx:id="numOfResults" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="215.27952575683594">
          <font>
             <Font size="18.0" />
