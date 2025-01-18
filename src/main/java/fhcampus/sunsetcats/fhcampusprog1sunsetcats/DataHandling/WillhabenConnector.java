@@ -31,6 +31,7 @@ public class WillhabenConnector extends DataConnector
     //===========================================================================|| MAIN FUNCTIONS ||===========================================================================================================
 
 
+
     // Startpunkt der Suche - Muss ein befülltes Search Objekt übergeben werden
     public ArrayList<Immobilie> startSearch(Search currentSearch) throws IllegalStateException
     {
