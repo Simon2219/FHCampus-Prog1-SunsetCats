@@ -8,8 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-
 import java.text.NumberFormat;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,20 +63,12 @@ public class ImmoDetailController {
         return zonedDateTime.format(dateFormatter);
     }
 
-    // Methode zur Formatierung des Preises
-    public String formatPrice(double price) {
+    // Methode zur Formatierung des Preises und der Fläche
+    public String formatDoubleValue(double doubleValue) {
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.GERMANY);
         numberFormat.setMinimumFractionDigits(2);  // Mindestens 2 Dezimalstellen
         numberFormat.setMaximumFractionDigits(2);  // Höchstens 2 Dezimalstellen
-        return numberFormat.format(price);
-    }
-
-    // Methode zur Formatierung der Fläche
-    public String formatEstateSize(double estateSize) {
-        NumberFormat numberFormat = NumberFormat.getInstance(Locale.GERMANY);
-        numberFormat.setMinimumFractionDigits(2);  // Mindestens 2 Dezimalstellen
-        numberFormat.setMaximumFractionDigits(2);  // Höchstens 2 Dezimalstellen
-        return numberFormat.format(estateSize);
+        return numberFormat.format(doubleValue);
     }
 
     public void setImmobilie(Immobilie immobilie) {
@@ -105,13 +95,13 @@ public class ImmoDetailController {
 
             // Preis formatieren und anzeigen
             double price = Double.parseDouble(immobilie.getAttribute(Immobilie.AttributeKey.PRICE).toString());
-            labelPrice.setText(formatPrice(price));
+            labelPrice.setText(formatDoubleValue(price));
 
             labelLocation.setText(immobilie.getAttribute(Immobilie.AttributeKey.LOCATION).toString());
 
             // Fläche formatieren und anzeigen
             double estateSize = Double.parseDouble(immobilie.getAttribute(Immobilie.AttributeKey.ESTATE_SIZE_TOTAL).toString());
-            labelEstateSize.setText(formatEstateSize(estateSize));
+            labelEstateSize.setText(formatDoubleValue(estateSize));
 
             labelNumberOfRooms.setText(immobilie.getAttribute(Immobilie.AttributeKey.NUMBER_OF_ROOMS).toString());
             labelImmoType.setText(immobilie.getAttribute(Immobilie.AttributeKey.IMMO_TYPE).toString());

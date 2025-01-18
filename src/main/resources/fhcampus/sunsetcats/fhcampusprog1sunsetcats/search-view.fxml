@@ -40,20 +40,20 @@
 
             <!-- Anzahl der Räume -->
             <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Zimmer:" />
-            <TextField prefWidth="100" promptText="Anzahl" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+            <TextField fx:id="roomField" prefWidth="100" promptText="Anzahl" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
 
             <!-- Preis -->
             <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Preis (in €):" />
             <HBox spacing="10">
-                <TextField prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-                <TextField prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                <TextField fx:id="priceFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                <TextField fx:id="priceToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
             </HBox>
 
             <!-- Fläche -->
             <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
             <HBox spacing="10">
-                <TextField prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-                <TextField prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                <TextField fx:id="areaFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                <TextField fx:id="areaToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
             </HBox>
 
             <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">

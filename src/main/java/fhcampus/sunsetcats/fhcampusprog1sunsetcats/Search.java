@@ -14,12 +14,10 @@ public class Search
     private final String searchTarget;
     private HashMap<String,HashMap<String,String>> rawSearchResults = new HashMap<>();
 
-
     public Integer duplicates = 0;
 
+    // =============================== Konstruktoren ===============================
 
-
-    // Constructor for common fields
     public Search(String startURL, ArrayList<String> searchFilters, boolean continueScrape)
     {
         this.searchStartURL = startURL;
@@ -88,6 +86,25 @@ public class Search
         }
     }
 
+
+    // =============================== Methoden ===============================
+
+    // Methoden zum Hinzufügen von Filtern zu der Liste der Suchfilter.
+    public void addSearchFilter(String filter) {
+        if (filter != null && !filter.isEmpty()) {
+            searchFilters.add(filter);
+        }
+    }
+
+    // Methode zum Löschen von Filtern aus der Liste der Suchfilter.
+    public void removeSearchFilter(String filter) {
+        searchFilters.remove(filter);
+    }
+
+    // GETTER-Methode für Suchfilter.
+    public ArrayList<String> getSearchFilters() {
+        return searchFilters;
+    }
 
 
     public void addResult(String id, HashMap<String,String> result)
