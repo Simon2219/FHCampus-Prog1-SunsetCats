@@ -125,7 +125,7 @@ public class SearchController {
             search.addSearchFilter("PRICE_TO=" + priceTo);
         }
 
-        /*/ Anzahl der Räume
+        /* Anzahl der Räume
         String rooms = roomField.getText();
         if (rooms != null && !rooms.isEmpty()) {
             try {

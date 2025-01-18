@@ -36,6 +36,9 @@ public class WillhabenConnector extends DataConnector
         String searchURL = buildURL(currentSearch); // Filter einbeziehen
         Debug.info("Starting search with URL: " + searchURL);
 
+        // Speichere die generierte URL im Search-Objekt
+        currentSearch.setSearchStartURL(searchURL);
+
         WillhabenScraper scraper = new WillhabenScraper(this, currentSearch); // Jede Suche = Neuer Scraper
         scraper.start();
 
