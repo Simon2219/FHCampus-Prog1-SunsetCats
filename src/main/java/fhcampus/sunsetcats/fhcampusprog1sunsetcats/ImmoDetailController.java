@@ -13,7 +13,9 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ImmoDetailController {
     @FXML
@@ -36,14 +38,12 @@ public class ImmoDetailController {
     private Label labelNumberOfRooms;
     @FXML
     private Label labelPublished;
-
     @FXML
     private Button goBack; // Zurück-Button
-
-    private Immobilie immobilie;
-
     @FXML
     private ImageView imageView; // Deklaration des ImageView
+
+    private Immobilie immobilie;
 
     public String formatPublishedDate(String isoDate) {
         if (isoDate == null || isoDate.isEmpty()) {
@@ -88,6 +88,73 @@ public class ImmoDetailController {
 
     private void updateDetails() {
         if (immobilie != null) {
+            // Map der Attribute und zugehörigen Labels
+            Map<Immobilie.AttributeKey, Label> attributeLabelMap = Map.of(
+                    Immobilie.AttributeKey.HEADING, labelHeading,
+                    Immobilie.AttributeKey.BODY_DYN, labelDescription,
+                    Immobilie.AttributeKey.PRICE, labelPrice,
+                    Immobilie.AttributeKey.LOCATION, labelLocation,
+                    Immobilie.AttributeKey.ESTATE_SIZE_TOTAL, labelEstateSize,
+                    Immobilie.AttributeKey.NUMBER_OF_ROOMS, labelNumberOfRooms,
+                    Immobilie.AttributeKey.IMMO_TYPE, labelImmoType,
+                    Immobilie.AttributeKey.FLOOR, labelFloor,
+                    Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished
+            );
+
+            // Alle Labels aktualisieren oder ausblenden
+            attributeLabelMap.forEach((key, label) -> {
+                Object value = immobilie.getAttribute(key);
+                if (value != null && !value.toString().isEmpty()) {
+                    label.setText(formatValue(key, value)); // Formatierung je nach Attribut
+                    label.setVisible(true);
+                } else {
+                    label.setVisible(false);
+                }
+            });
+
+            // Bild aktualisieren oder ausblenden
+            Object imageUrl = immobilie.getAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK);
+            if (imageUrl != null && !imageUrl.toString().isEmpty()) {
+                imageView.setImage(new Image(imageUrl.toString(), true));
+                imageView.setVisible(true);
+            } else {
+                imageView.setImage(null);
+                imageView.setVisible(false);
+            }
+        } else {
+            // Keine Immobilie ausgewählt: Alle Elemente ausblenden
+            resetDetailView();
+        }
+    }
+
+    // Formatierung je nach Attribut
+    private String formatValue(Immobilie.AttributeKey key, Object value) {
+        if (key == Immobilie.AttributeKey.PRICE || key == Immobilie.AttributeKey.ESTATE_SIZE_TOTAL) {
+            try {
+                return formatDoubleValue(Double.parseDouble(value.toString()));
+            } catch (NumberFormatException e) {
+                return "Ungültiger Wert";
+            }
+        } else if (key == Immobilie.AttributeKey.PUBLISHED_STRING) {
+            return formatPublishedDate(value.toString());
+        }
+        return value.toString();
+    }
+
+    // Alle UI-Elemente zurücksetzen
+    private void resetDetailView() {
+        List<Label> labels = List.of(
+                labelHeading, labelDescription, labelPrice, labelLocation,
+                labelEstateSize, labelNumberOfRooms, labelImmoType, labelFloor, labelPublished
+        );
+        labels.forEach(label -> label.setVisible(false));
+        imageView.setVisible(false);
+    }
+
+
+    /*
+    private void updateDetails() {
+        if (immobilie != null) {
             // labelId.setText(immobilie.getAttribute(Immobilie.AttributeKey.ID).toString());
 
             labelHeading.setText(immobilie.getAttribute(Immobilie.AttributeKey.HEADING).toString());
@@ -123,4 +190,6 @@ public class ImmoDetailController {
 
         }
     }
+
+     */
 }

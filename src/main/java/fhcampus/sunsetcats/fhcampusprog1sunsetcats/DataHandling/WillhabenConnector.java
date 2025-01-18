@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import static java.lang.Double.parseDouble;
 
-    /*
+     /*
         Inhertis from DataConnector
         Immobilien Factory
         Specifies Website Specific behaviour for processing Search Results and Search Filters
@@ -58,10 +58,13 @@ public class WillhabenConnector extends DataConnector
 
     private ArrayList<Immobilie> processSearchResults(Search currentSearch)
     {
+        Debug.info("Anzahl der Suchergebnisse: " + currentSearch.getRawSearchResults().size());
         ArrayList<Immobilie> results = new ArrayList<>();
 
         for(HashMap<String,String> searchResult : currentSearch.getRawSearchResults().values())
         {
+            String roomBucket = searchResult.get("NUMBER_OF_ROOMS"); // Willhaben-Daten
+
             Immobilie neueImmobilie = new Immobilie();
 
             neueImmobilie.setAttribute(Immobilie.AttributeKey.ID, searchResult.get("id"));
@@ -96,7 +99,7 @@ public class WillhabenConnector extends DataConnector
             neueImmobilie.setAttribute(Immobilie.AttributeKey.FREE_AREA_TYPE, searchResult.get("FREE_AREA_TYPE"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.FREE_AREA_TYPE_NAME, searchResult.get("FREE_AREA_TYPE_NAME"));
 
-            neueImmobilie.setAttribute(Immobilie.AttributeKey.NUMBER_OF_ROOMS, searchResult.get("NUMBER_OF_ROOMS"));
+            neueImmobilie.setAttribute(Immobilie.AttributeKey.NUMBER_OF_ROOMS, roomBucket);
             neueImmobilie.setAttribute(Immobilie.AttributeKey.ROOMS, searchResult.get("ROOMS"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.FLOOR, searchResult.get("FLOOR"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.NUMBER_OF_CHILDREN, searchResult.get("NUMBER_OF_CHILDREN"));
@@ -137,12 +140,33 @@ public class WillhabenConnector extends DataConnector
 
             results.add(neueImmobilie);
             }
+
         return results;
+    }
+
+    private boolean matchesRooms(String roomBucket, Integer userInputRooms) {
+        if (userInputRooms == null) {
+            return true; // Kein Filter -> immer Treffer
+        }
+        try {
+            int rooms = parseRoomsBucket(roomBucket); // Analysiere `roomBucket`
+            return rooms == userInputRooms; // Vergleiche mit Benutzereingabe
+        } catch (IllegalArgumentException e) {
+            Debug.warning("Ungültiger Raumwert in `roomBucket`: " + roomBucket);
+            return false; // Ungültige Daten -> Kein Treffer
+        }
+    }
+
+    private int parseRoomsBucket(String bucketValue) {
+        if (bucketValue == null || !bucketValue.matches("\\d+X\\d+")) {
+            throw new IllegalArgumentException("Ungültiger Wert für NUMBER_OF_ROOMS: " + bucketValue);
+        }
+        String[] parts = bucketValue.split("X");
+        return Integer.parseInt(parts[0]); // Gebe die Raumanzahl zurück
     }
 
 
     // Build Search URL´s from Search Filters
-
     private String buildURL(Search search) {
         StringBuilder url = new StringBuilder();
 

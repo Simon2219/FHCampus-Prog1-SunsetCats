@@ -16,6 +16,11 @@ public class Search
 
     public Integer duplicates = 0;
 
+    private Integer minRooms;
+    private Integer maxRooms;
+
+
+
     // =============================== Konstruktoren ===============================
 
     public Search(String startURL, ArrayList<String> searchFilters, boolean continueScrape)
@@ -135,6 +140,25 @@ public class Search
     public boolean continueScrape()
     {
         return this.continueScrape;
+    }
+
+
+
+    // GETTER und SETTER für Räume
+    public Integer getMinRooms() {
+        return this.minRooms; // minRooms ist ein Attribut in der Klasse
+    }
+
+    public void setMinRooms(Integer minRooms) {
+        this.minRooms = minRooms;
+    }
+
+    public Integer getMaxRooms() {
+        return this.maxRooms; // maxRooms ist ein Attribut in der Klasse
+    }
+
+    public void setMaxRooms(Integer maxRooms) {
+        this.maxRooms = maxRooms;
     }
 
 

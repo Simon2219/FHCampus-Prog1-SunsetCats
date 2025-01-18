@@ -15,7 +15,7 @@ public class WelcomeController {
     private ImageView logo;
 
     public void initialize() {
-        welcomeText.setText("Wilkommen bei der Sunset Cats Immobiliensuche!");
+        welcomeText.setText("Willkommen bei der Sunset Cats Immobiliensuche!");
         goToSearch.setText("Starten Sie ihre erste Suche!");
 
         Image logoFile = new Image(getClass().getResource("SunsetCats_Logo_Web_RotGelb.png").toExternalForm());

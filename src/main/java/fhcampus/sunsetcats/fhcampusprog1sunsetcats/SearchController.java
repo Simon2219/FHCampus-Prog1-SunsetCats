@@ -51,7 +51,6 @@ public class SearchController {
 
     @FXML
     private void startSearch() {
-
         // Auswahl Miet- oder Eigentumswohnung bildet die baseURL
         String baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote"; // Standardwert
         if (radioMiete.isSelected()) {
@@ -126,10 +125,25 @@ public class SearchController {
             search.addSearchFilter("PRICE_TO=" + priceTo);
         }
 
+        /*/ Anzahl der Räume
+        String rooms = roomField.getText();
+        if (rooms != null && !rooms.isEmpty()) {
+            try {
+                int roomCount = Integer.parseInt(rooms.trim()); // Validierung der Eingabe als Zahl
+                search.setMinRooms(roomCount); // Setze sowohl minRooms ...
+                search.setMaxRooms(roomCount); // ... als auch maxRooms
+            } catch (NumberFormatException e) {
+                Debug.warning("Ungültige Eingabe für Räume: " + rooms);
+                return; // Abbrechen, wenn die Eingabe ungültig ist
+            }
+        }
+
+         */
+
         // Anzahl der Räume
         String rooms = roomField.getText();
         if (rooms != null && !rooms.isEmpty()) {
-            search.addSearchFilter("NUMBER_OF_ROOMS=" + rooms);
+            search.addSearchFilter("NO_OF_ROOMS_BUCKET=" + rooms + "X" + rooms);
         }
 
         Debug.info("Applied Filters: " + search.getSearchFilters());

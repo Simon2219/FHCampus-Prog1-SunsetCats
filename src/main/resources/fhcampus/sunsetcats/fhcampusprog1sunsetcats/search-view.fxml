@@ -60,7 +60,7 @@
                 <children>
                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="65.0">
                         <children>
-                            <Button fx:id="resetFilters" mnemonicParsing="false" text="Zurücksetzen" />
+                            <Button fx:id="resetFilters" mnemonicParsing="false" onAction="#resetFilters" text="Zurücksetzen" />
                             <Button fx:id="startSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" />
                         </children>
                     </HBox>

@@ -151,6 +151,12 @@ public abstract class SiteScraper {
             HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(url)).GET().build();
             HttpResponse<String> response = connector.getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
+            // Debugging der HTTP-Antwort
+            Debug.info("HTTP-Anfrage an URL: " + url);
+            Debug.info("HTTP-Statuscode: " + response.statusCode());
+            Debug.info("HTTP-Header: " + response.headers());
+            Debug.info("HTTP-Response-Inhalt (gekürzt): " + response.body().substring(0, Math.min(500, response.body().length())) + "...");
+
             if (response.statusCode() != 200)
             {
                 Debug.warning("Failed to fetch URL: " + url);
