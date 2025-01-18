@@ -141,8 +141,7 @@ public class WillhabenConnector extends DataConnector
     }
 
 
-
-    // TODO Build Search URL´s from Search Filters
+    // Build Search URL´s from Search Filters
 
     private String buildURL(Search search) {
         StringBuilder url = new StringBuilder();
@@ -168,7 +167,6 @@ public class WillhabenConnector extends DataConnector
     }
 
     /*
-
     private String buildURL()
     {
         StringBuilder url = new StringBuilder();

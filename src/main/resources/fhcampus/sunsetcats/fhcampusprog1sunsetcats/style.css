@@ -1,3 +1,13 @@
+/* Schriftart definieren */
+@font-face {
+    font-family: "Geist";
+    src: url("Fonts/Geist/static");
+}
+
+.root {
+    -fx-font-family: "Geist";
+}
+
 .list-view .scroll-bar:horizontal .increment-arrow,
 .list-view .scroll-bar:horizontal .decrement-arrow,
 .list-view .scroll-bar:horizontal .increment-button,
@@ -6,7 +16,7 @@
 }
 
 .button {
-    -fx-font: 14px "System";
+    -fx-font: 14px "Geist";
     -fx-padding: 10;
     -fx-background-color: #dafe45;
     -fx-border-color: #000000;
@@ -20,7 +30,7 @@
 }
 
 .menu-button {
-    -fx-font: 16px "System";
+    -fx-font: 16px "Geist";
     -fx-max-width: 150;
 }
 

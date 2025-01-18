@@ -4,6 +4,7 @@ import fhcampus.sunsetcats.fhcampusprog1sunsetcats.DataHandling.WillhabenConnect
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -14,15 +15,21 @@ import java.util.logging.*;
 
 public class AppMain extends Application
 {
-
     static final WillhabenConnector willhabenConnector = new WillhabenConnector();
     private static final Logger Debug = Logger.getLogger(AppMain.class.getName());
 
     @Override
     public void start(Stage stage) throws IOException
     {
+        // Schriftart laden
+        Font.loadFont(getClass().getResource("Fonts/Geist/static/Geist-Regular.ttf").toExternalForm(), 10);
+
         FXMLLoader fxmlLoader = new FXMLLoader(AppMain.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+
+        // CSS laden
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         stage.setTitle("Sunset Cats Immobilien");
         stage.setScene(scene);
         stage.show();
