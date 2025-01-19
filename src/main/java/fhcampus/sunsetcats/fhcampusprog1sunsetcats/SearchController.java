@@ -95,8 +95,8 @@ public class SearchController {
         System.out.println("Generierter areaId-Filter: " + areaIdFilter); // Test-Ausgabe
 
         // Base-URL zur Anzeige der finalen URL
-        System.out.println("Finale Base-URL: " + baseURL + areaIdFilter);
         String finalURL = baseURL + areaIdFilter;
+        System.out.println("Finale Base-URL: " + finalURL);
 
         /*
         if (radioMiete.isSelected()) {
@@ -105,6 +105,10 @@ public class SearchController {
             baseURL = "https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote";
         }
         */
+
+
+
+
 
         Search searchImmo = new Search(finalURL, false);
 
@@ -137,11 +141,24 @@ public class SearchController {
         districtCheckComboBox.getCheckModel().clearChecks();
     }
 
+    public String getRooms() {
+        // Anzahl der Räume
+        String rooms = roomField.getText();
+        String amountRooms = null;
+        if (rooms != null && !rooms.isEmpty()) {
+            amountRooms = ("&NO_OF_ROOMS_BUCKET=" + roomField.getText() + "X" + roomField.getText());
+        }
+        return amountRooms;
+    }
+
     /**
      * Verarbeitet die Benutzereingaben und fügt Filter in das `Search`-Objekt ein.
      *
      * @param search Das zu bearbeitende `Search`-Objekt.
      */
+
+
+
     private void processFilters(Search search) {
         // Keywords
         String keyword = searchField.getText();
@@ -190,11 +207,7 @@ public class SearchController {
         }
          */
 
-        // Anzahl der Räume
-        String rooms = roomField.getText();
-        if (rooms != null && !rooms.isEmpty()) {
-            search.addSearchFilter("NO_OF_ROOMS_BUCKET=" + rooms + "X" + rooms);
-        }
+
 
         /*
         // Ausgewählte Bezirke
