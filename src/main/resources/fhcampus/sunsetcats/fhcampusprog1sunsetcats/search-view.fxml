@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
 
 <BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.SearchController">
 
@@ -36,7 +37,20 @@
 
             <!-- Standort -->
             <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Standort:" />
-            <TextField promptText="Standort" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+            <VBox>
+                <CheckComboBox fx:id="locationCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                <Label text="Bundesland auswählen"
+                       style="-fx-font-size: 14px; -fx-font-style: italic; -fx-text-fill: #AAAAAA; -fx-padding: 10;"
+                       alignment="CENTER_LEFT"
+                       visible="true"
+                       fx:id="placeholderLabel" />
+            </VBox>
+
+            <!-- ZUSÄTZLICHES DROPDOWN BEZIRKE -->
+            <VBox fx:id="districtDropdownContainer" spacing="10" visible="false" managed="false">
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Bezirk auswählen:" />
+                <CheckComboBox fx:id="districtCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+            </VBox>
 
             <!-- Anzahl der Räume -->
             <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Zimmer:" />
@@ -48,35 +62,13 @@
                 <TextField fx:id="priceFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
                 <TextField fx:id="priceToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
             </HBox>
-
-            <!-- Fläche -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
-            <HBox spacing="10">
-                <TextField fx:id="areaFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-                <TextField fx:id="areaToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-            </HBox>
-
-            <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">
-                <children>
-                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="65.0">
-                        <children>
-                            <Button fx:id="resetFilters" mnemonicParsing="false" onAction="#resetFilters" text="Zurücksetzen" />
-                            <Button fx:id="startSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" />
-                        </children>
-                    </HBox>
-                </children>
-            </VBox>
         </VBox>
     </left>
 
-    <!-- Ergebnisse auf der rechten Seite -->
+    <!-- Ergebnisse-Bereich in der Mitte -->
     <center>
-        <VBox spacing="15.0">
-            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Suchergebnisse" />
-            <VBox fx:id="resultArea" prefHeight="734.0" prefWidth="600.0" />
-            <padding>
-                <Insets bottom="11.0" left="11.0" right="11.0" top="11.0" />
-            </padding>
+        <VBox fx:id="resultArea" spacing="10" style="-fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-width: 1; -fx-border-radius: 10;">
+            <Label text="Suchergebnisse werden hier angezeigt" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" />
         </VBox>
     </center>
 

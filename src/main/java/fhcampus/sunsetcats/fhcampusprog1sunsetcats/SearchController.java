@@ -1,17 +1,22 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.CheckComboBox;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static fhcampus.sunsetcats.fhcampusprog1sunsetcats.AppMain.willhabenConnector;
 
 public class SearchController {
+
+    // Standard-Felder für die Filtersuche
     @FXML
     private Button startSearch;
 
@@ -45,37 +50,54 @@ public class SearchController {
     @FXML
     private TextField roomField;
 
+    // Neue Felder für Bundesländer und Bezirke
+    @FXML
+    private VBox districtDropdownContainer; // Container für Bezirke/Behörden
+    @FXML
+    private CheckComboBox<String> locationCheckComboBox; // Dropdown für Bundesländer
+    @FXML
+    private CheckComboBox<String> districtCheckComboBox; // Dropdown für Bezirke/Behörden
+
+    private final Logger debugLogger = Logger.getLogger(SearchController.class.getName());
+
     public void initialize() {
-        Navigation.loadContentToArea(resultArea,"result-view.fxml");
+        // Bestehende Initialisierungen
+        debugLogger.info("SearchController initialized");
+        Navigation.loadContentToArea(resultArea, "result-view.fxml");
+
+        // Initialisieren der zusätzlichen Dropdown-Funktionen für Bezirke/Bundesländer
+        setupLocationCheckComboBox();
+        setupDropdownVisibilityLogic();
+        updateDistrictDropdownVisibility();
     }
 
     @FXML
     private void startSearch() {
-        // Auswahl Miet- oder Eigentumswohnung bildet die baseURL
-        String baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote"; // Standardwert
+        // Standard-BaseURL
+        String baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote";
         if (radioMiete.isSelected()) {
             baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote";
         } else if (radioEigentum.isSelected()) {
             baseURL = "https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote";
         }
 
-        Search searchImmo = new Search(baseURL, false );
+        Search searchImmo = new Search(baseURL, false);
 
-        // Benutzereingaben verarbeiten
+        // Filter anwenden
         processFilters(searchImmo);
 
-        // Suche starten
+        // Suche ausführen
         ArrayList<Immobilie> results = willhabenConnector.startSearch(searchImmo);
 
-        // Ergebnisse verarbeiten und anzeigen
+        // Ergebnisse anzeigen
         printResults(results);
         ResultStore.getInstance().setSearchResults(results);
-        Navigation.loadContentToArea(resultArea,"result-view.fxml");
+        Navigation.loadContentToArea(resultArea, "result-view.fxml");
     }
 
     @FXML
     private void resetFilters() {
-        // Alle Felder zurücksetzen
+        // Standardfelder zurücksetzen
         searchField.clear();
         radioWohnung.setSelected(false);
         radioHaus.setSelected(false);
@@ -84,12 +106,16 @@ public class SearchController {
         priceFromField.clear();
         priceToField.clear();
         roomField.clear();
+
+        // Dropdown-Filter zurücksetzen
+        locationCheckComboBox.getCheckModel().clearChecks();
+        districtCheckComboBox.getCheckModel().clearChecks();
     }
 
     /**
-     * Verarbeitet die Benutzereingaben und fügt Filter in das Search-Objekt ein.
+     * Verarbeitet die Benutzereingaben und fügt Filter in das `Search`-Objekt ein.
      *
-     * @param search Das zu bearbeitende Search-Objekt.
+     * @param search Das zu bearbeitende `Search`-Objekt.
      */
     private void processFilters(Search search) {
         // Keywords
@@ -137,7 +163,6 @@ public class SearchController {
                 return; // Abbrechen, wenn die Eingabe ungültig ist
             }
         }
-
          */
 
         // Anzahl der Räume
@@ -146,18 +171,172 @@ public class SearchController {
             search.addSearchFilter("NO_OF_ROOMS_BUCKET=" + rooms + "X" + rooms);
         }
 
-        Debug.info("Applied Filters: " + search.getSearchFilters());
+        // Ausgewählte Bezirke/Bundesländer hinzufügen
+        List<String> selectedDistricts = districtCheckComboBox.getCheckModel().getCheckedItems();
+        if (!selectedDistricts.isEmpty()) {
+            search.addSearchFilter("districts=" + String.join(",", selectedDistricts));
+        }
+
+        debugLogger.info("Applied Filters: " + search.getSearchFilters());
     }
 
-    private static final Logger Debug = Logger.getLogger(AppMain.class.getName());
-    private static void printResults(ArrayList<Immobilie> searchResults)
-    {
-        for (Immobilie currentImmobilie : searchResults)
-        {
+    private static void printResults(ArrayList<Immobilie> searchResults) {
+        for (Immobilie currentImmobilie : searchResults) {
             Double immoPrice = currentImmobilie.getAttribute(Immobilie.AttributeKey.PRICE);
-            Debug.info(String.format("ID: %s | PRICE: %f  -  %s", currentImmobilie.getAttribute(Immobilie.AttributeKey.ID),
-                    immoPrice, currentImmobilie.getAttribute(Immobilie.AttributeKey.DESCRIPTION)));
+            Logger.getLogger(SearchController.class.getName()).info(
+                    String.format("ID: %s | PRICE: %f - %s",
+                            currentImmobilie.getAttribute(Immobilie.AttributeKey.ID),
+                            immoPrice,
+                            currentImmobilie.getAttribute(Immobilie.AttributeKey.DESCRIPTION))
+            );
         }
-        System.out.println(searchResults.size());
     }
+
+    // --- Dropdown-Logik für Bezirke/Bundesländer ---
+
+    private void setupLocationCheckComboBox() {
+        locationCheckComboBox.getItems().addAll(
+                "Wien", "Niederösterreich", "Burgenland", "Oberösterreich",
+                "Steiermark", "Kärnten", "Salzburg", "Tirol", "Vorarlberg"
+        );
+    }
+
+    private void setupDropdownVisibilityLogic() {
+        locationCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
+            updateDistrictDropdownVisibility();
+        });
+    }
+
+    private void updateDistrictDropdownVisibility() {
+        List<String> selectedStates = locationCheckComboBox.getCheckModel().getCheckedItems();
+
+        if (selectedStates.isEmpty()) {
+            districtDropdownContainer.setVisible(false);
+            districtDropdownContainer.setManaged(false);
+            return;
+        }
+
+        updateDistrictCheckComboBox(selectedStates);
+        districtDropdownContainer.setVisible(true);
+        districtDropdownContainer.setManaged(true);
+    }
+
+    private void updateDistrictCheckComboBox(List<String> selectedStates) {
+        List<String> combinedDistricts = new ArrayList<>();
+
+        if (selectedStates.contains("Wien")) {
+            combinedDistricts.addAll(getDistrictsForWien());
+        }
+        if (selectedStates.contains("Niederösterreich")) {
+            combinedDistricts.addAll(getDistrictsForNiederoesterreich());
+        }
+        if (selectedStates.contains("Burgenland")) {
+            combinedDistricts.addAll(getDistrictsForBurgenland());
+        }
+        if (selectedStates.contains("Oberösterreich")) {
+            combinedDistricts.addAll(getDistrictsForOberoesterreich());
+        }
+        if (selectedStates.contains("Steiermark")) {
+            combinedDistricts.addAll(getDistrictsForSteiermark());
+        }
+        if (selectedStates.contains("Kärnten")) {
+            combinedDistricts.addAll(getDistrictsForKaernten());
+        }
+        if (selectedStates.contains("Salzburg")) {
+            combinedDistricts.addAll(getDistrictsForSalzburg());
+        }
+        if (selectedStates.contains("Tirol")) {
+            combinedDistricts.addAll(getDistrictsForTirol());
+        }
+        if (selectedStates.contains("Vorarlberg")) {
+            combinedDistricts.addAll(getDistrictsForVorarlberg());
+        }
+
+        districtCheckComboBox.getItems().setAll(combinedDistricts);
+    }
+
+
+    // Methode für Bezirke in Wien
+    private List<String> getDistrictsForWien() {
+        return List.of(
+                "1. Innere Stadt", "2. Leopoldstadt", "3. Landstraße", "4. Wieden", "5. Margareten",
+                "6. Mariahilf", "7. Neubau", "8. Josefstadt", "9. Alsergrund", "10. Favoriten",
+                "11. Simmering", "12. Meidling", "13. Hietzing", "14. Penzing", "15. Rudolfsheim-Fünfhaus",
+                "16. Ottakring", "17. Hernals", "18. Währing", "19. Döbling", "20. Brigittenau",
+                "21. Floridsdorf", "22. Donaustadt", "23. Liesing"
+        );
+    }
+
+    // Methode für Bezirke in Niederösterreich
+    private List<String> getDistrictsForNiederoesterreich() {
+        return List.of(
+                "Amstetten", "Baden", "Bruck an der Leitha", "Gänserndorf", "Gmünd",
+                "Hollabrunn", "Horn", "Korneuburg", "Krems an der Donau (Stadt)",
+                "Krems-Land", "Lilienfeld", "Melk", "Mistelbach", "Mödling",
+                "Neunkirchen", "St. Pölten (Stadt)", "St. Pölten-Land", "Scheibbs",
+                "Tulln", "Waidhofen an der Thaya", "Waidhofen an der Ybbs (Stadt)",
+                "Wiener Neustadt (Stadt)", "Wiener Neustadt-Land", "Zwettl"
+        );
+    }
+
+    // Methode für Bezirke im Burgenland
+    private List<String> getDistrictsForBurgenland() {
+        return List.of(
+                "Eisenstadt (Stadt)", "Eisenstadt-Umgebung", "Güssing", "Jennersdorf",
+                "Mattersburg", "Neusiedl am See", "Oberpullendorf", "Oberwart", "Rust (Stadt)"
+        );
+    }
+
+    // Methode für Bezirke in Oberösterreich
+    private List<String> getDistrictsForOberoesterreich() {
+        return List.of(
+                "Linz (Stadt)", "Linz-Land", "Braunau am Inn", "Eferding", "Freistadt",
+                "Gmunden", "Grieskirchen", "Kirchdorf an der Krems", "Perg",
+                "Ried im Innkreis", "Rohrbach", "Schärding", "Steyr (Stadt)",
+                "Steyr-Land", "Urfahr-Umgebung", "Vöcklabruck", "Wels (Stadt)", "Wels-Land"
+        );
+    }
+
+    // Methode für Bezirke in der Steiermark
+    private List<String> getDistrictsForSteiermark() {
+        return List.of(
+                "Graz (Stadt)", "Graz-Umgebung", "Deutschlandsberg",
+                "Hartberg-Fürstenfeld", "Leibnitz", "Leoben", "Liezen",
+                "Murau", "Murtal", "Südoststeiermark", "Voitsberg", "Weiz"
+        );
+    }
+
+    // Methode für Bezirke in Kärnten
+    private List<String> getDistrictsForKaernten() {
+        return List.of(
+                "Klagenfurt am Wörthersee (Stadt)", "Klagenfurt-Land",
+                "Villach (Stadt)", "Villach-Land", "Feldkirchen",
+                "Hermagor", "Spittal an der Drau", "St. Veit an der Glan",
+                "Völkermarkt", "Wolfsberg"
+        );
+    }
+
+    // Methode für Bezirke in Salzburg
+    private List<String> getDistrictsForSalzburg() {
+        return List.of(
+                "Salzburg (Stadt)", "Salzburg-Umgebung", "Hallein",
+                "St. Johann im Pongau", "Tamsweg", "Zell am See"
+        );
+    }
+
+    // Methode für Bezirke in Tirol
+    private List<String> getDistrictsForTirol() {
+        return List.of(
+                "Innsbruck (Stadt)", "Innsbruck-Land", "Imst", "Kitzbühel",
+                "Kufstein", "Landeck", "Lienz", "Reutte", "Schwaz"
+        );
+    }
+
+    // Methode für Bezirke in Vorarlberg
+    private List<String> getDistrictsForVorarlberg() {
+        return List.of(
+                "Bregenz", "Dornbirn", "Feldkirch", "Bludenz"
+        );
+    }
+
 }
