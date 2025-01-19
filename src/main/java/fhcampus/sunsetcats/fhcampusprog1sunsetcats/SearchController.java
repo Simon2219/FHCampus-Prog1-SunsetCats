@@ -71,16 +71,26 @@ public class SearchController {
 
     @FXML
     private void startSearch() {
+        String selectedType = "";
+
         // Wohnung und Haus mit Miete/Eigentum prüfen und URL entsprechend setzen
         if (radioWohnung.isSelected() && radioMiete.isSelected()) {
             baseURL += "/mietwohnungen/mietwohnung-angebote?";
+            selectedType = "Miete";
         } else if (radioWohnung.isSelected() && radioEigentum.isSelected()) {
             baseURL += "/eigentumswohnung/eigentumswohnung-angebote?";
+            selectedType = "Eigentum";
         } else if (radioHaus.isSelected() && radioMiete.isSelected()) {
             baseURL += "/haus-mieten/haus-angebote?";
+            selectedType = "Miete";
         } else if (radioHaus.isSelected() && radioEigentum.isSelected()) {
             baseURL += "/haus-kaufen/haus-angebote?";
+            selectedType = "Eigentum";
         }
+
+        // Speichert die Auswahl der Art (Miete/Eigentum) im Resultstore,
+        // damit sie vom ImmoDetailController abgefragt werden kann
+        ResultStore.getInstance().setSelectedType(selectedType);
 
         // Erstelle die Filter und formatiere sie als URL-Teile
         String areaIdFilter = generateAreaOrDistrictIdString();
@@ -120,10 +130,21 @@ public class SearchController {
         priceFromField.clear();
         priceToField.clear();
         roomField.clear();
+        areaFromField.clear();
+        areaToField.clear();
 
         // Dropdown-Filter zurücksetzen
         locationCheckComboBox.getCheckModel().clearChecks();
         districtCheckComboBox.getCheckModel().clearChecks();
+    }
+
+    public String getSelectedImmoType() {
+        if (radioMiete.isSelected()) {
+            return "Miete";
+        } else if (radioEigentum.isSelected()) {
+            return "Eigentum";
+        }
+        return "Unbekannt";
     }
 
     public String getRooms() {

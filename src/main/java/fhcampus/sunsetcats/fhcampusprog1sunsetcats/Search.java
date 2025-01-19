@@ -16,11 +16,6 @@ public class Search
 
     public Integer duplicates = 0;
 
-    private Integer minRooms;
-    private Integer maxRooms;
-
-
-
     // =============================== Konstruktoren ===============================
 
     public Search(String startURL, ArrayList<String> searchFilters, boolean continueScrape)
@@ -94,24 +89,6 @@ public class Search
 
     // =============================== Methoden ===============================
 
-    // Methoden zum Hinzufügen von Filtern zu der Liste der Suchfilter.
-    public void addSearchFilter(String filter) {
-        if (filter != null && !filter.isEmpty()) {
-            searchFilters.add(filter);
-        }
-    }
-
-    // Methode zum Löschen von Filtern aus der Liste der Suchfilter.
-    public void removeSearchFilter(String filter) {
-        searchFilters.remove(filter);
-    }
-
-    // GETTER-Methode für Suchfilter.
-    public ArrayList<String> getSearchFilters() {
-        return searchFilters;
-    }
-
-
     public void addResult(String id, HashMap<String,String> result)
     {
         rawSearchResults.put(id, result);
@@ -137,35 +114,10 @@ public class Search
         return this.searchStartURL;
     }
 
-    public void setSearchStartURL(String searchStartURL) {
-        this.searchStartURL = searchStartURL;
-    }
-
     public boolean continueScrape()
     {
         return this.continueScrape;
     }
-
-
-
-    // GETTER und SETTER für Räume
-    public Integer getMinRooms() {
-        return this.minRooms; // minRooms ist ein Attribut in der Klasse
-    }
-
-    public void setMinRooms(Integer minRooms) {
-        this.minRooms = minRooms;
-    }
-
-    public Integer getMaxRooms() {
-        return this.maxRooms; // maxRooms ist ein Attribut in der Klasse
-    }
-
-    public void setMaxRooms(Integer maxRooms) {
-        this.maxRooms = maxRooms;
-    }
-
-
 }
 
 

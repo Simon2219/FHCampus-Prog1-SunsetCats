@@ -62,9 +62,14 @@ public class ImmoDetailController {
                     Immobilie.AttributeKey.NUMBER_OF_ROOMS, labelNumberOfRooms,
                     Immobilie.AttributeKey.IMMO_TYPE, labelImmoType,
                     Immobilie.AttributeKey.FLOOR, labelFloor,
-                    Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished,
+                    // Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished,
                     Immobilie.AttributeKey.FREE_AREA_TYPE_NAME, labelFreeAreaType
             );
+
+            // Setze den Immobilientyp basierend auf dem gespeicherten Wert
+            String immoType = ResultStore.getInstance().getSelectedType();
+            labelType.setText(immoType);
+            labelType.setVisible(true);
 
             // Alle Labels aktualisieren oder ausblenden
             attributeLabelMap.forEach((key, label) -> {
@@ -86,6 +91,10 @@ public class ImmoDetailController {
                 imageView.setImage(null);
                 imageView.setVisible(false);
             }
+
+            // Setze das formatierte Veröffentlichungsdatum
+            String publishedDate = immobilie.getAttribute(Immobilie.AttributeKey.PUBLISHED_STRING);
+            labelPublished.setText(formatPublishedDate(publishedDate));
         } else {
             // Keine Immobilie ausgewählt: Alle Elemente ausblenden
             resetDetailView();
@@ -160,46 +169,4 @@ public class ImmoDetailController {
         labels.forEach(label -> label.setVisible(false));
         imageView.setVisible(false);
     }
-
-
-    /*
-    private void updateDetails() {
-        if (immobilie != null) {
-            // labelId.setText(immobilie.getAttribute(Immobilie.AttributeKey.ID).toString());
-
-            labelHeading.setText(immobilie.getAttribute(Immobilie.AttributeKey.HEADING).toString());
-            labelDescription.setText(immobilie.getAttribute(Immobilie.AttributeKey.BODY_DYN).toString());
-
-            // Preis formatieren und anzeigen
-            double price = Double.parseDouble(immobilie.getAttribute(Immobilie.AttributeKey.PRICE).toString());
-            labelPrice.setText(formatDoubleValue(price));
-
-            labelLocation.setText(immobilie.getAttribute(Immobilie.AttributeKey.LOCATION).toString());
-
-            // Fläche formatieren und anzeigen
-            double estateSize = Double.parseDouble(immobilie.getAttribute(Immobilie.AttributeKey.ESTATE_SIZE_TOTAL).toString());
-            labelEstateSize.setText(formatDoubleValue(estateSize));
-
-            labelNumberOfRooms.setText(immobilie.getAttribute(Immobilie.AttributeKey.NUMBER_OF_ROOMS).toString());
-            labelImmoType.setText(immobilie.getAttribute(Immobilie.AttributeKey.IMMO_TYPE).toString());
-            labelFloor.setText(immobilie.getAttribute(Immobilie.AttributeKey.FLOOR).toString());
-
-            // Setze das formatierte Veröffentlichungsdatum
-            String publishedDate = immobilie.getAttribute(Immobilie.AttributeKey.PUBLISHED_STRING);
-            labelPublished.setText(formatPublishedDate(publishedDate));
-
-            String imageUrl = immobilie.getAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK);
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                imageView.setImage(new Image(imageUrl, true));
-            } else {
-                imageView.setImage(null); // Set to null if no image available
-            }
-
-            // TODO
-            // weitere Details
-
-        }
-    }
-
-     */
 }

@@ -8,6 +8,7 @@ public class ResultStore {
     private static ResultStore instance;
     private List<Immobilie> searchResults;
     private Immobilie selectedImmo;
+    private String selectedType;
 
     private ResultStore() {
         searchResults = new ArrayList<>();
@@ -18,6 +19,15 @@ public class ResultStore {
             instance = new ResultStore();
         }
         return instance;
+    }
+
+    // Get and set selected Type (buy or rent)
+    public String getSelectedType() {
+        return selectedType;
+    }
+
+    public void setSelectedType(String selectedType) {
+        this.selectedType = selectedType;
     }
 
     // Get and set the result list
