@@ -1,20 +1,20 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.CheckComboBox;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import static fhcampus.sunsetcats.fhcampusprog1sunsetcats.AppMain.willhabenConnector;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class SearchController {
     String baseURL = "https://www.willhaben.at/iad/immobilien";
@@ -23,40 +23,28 @@ public class SearchController {
     // Standard-Felder für die Filtersuche
     @FXML
     private Button startSearch;
-
     @FXML
     private Button resetFilters;
-
     @FXML
     private VBox resultArea;
-
     @FXML
     private TextField searchField;
-
     @FXML
     private RadioButton radioWohnung;
-
     @FXML
     private RadioButton radioHaus;
-
     @FXML
     private RadioButton radioMiete;
-
     @FXML
     private RadioButton radioEigentum;
-
     @FXML
     private TextField priceFromField;
-
     @FXML
     private TextField priceToField;
-
     @FXML
     private TextField roomField;
-
     @FXML
     private TextField areaFromField;
-
     @FXML
     private TextField areaToField;
 
@@ -93,19 +81,20 @@ public class SearchController {
         } else if (radioHaus.isSelected() && radioEigentum.isSelected()) {
             baseURL += "/haus-kaufen/haus-angebote?";
         }
-        // Generiere den areaId-Filter basierend auf den ausgewählten Bezirken oder Bundesländern
+
+        // Erstelle die Filter und formatiere sie als URL-Teile
         String areaIdFilter = generateAreaOrDistrictIdString();
         String RoomsFilter = getRooms();
         String FromPriceFilter = getPriceFrom();
         String ToPriceFilter = getPriceTo();
         String areaFromFilter = getSizeFrom();
         String areaToFilter = getSizeTo();
-
+        String keywordsFilter = getKeywords();
 
         // Test: Print der areaIdFilter zur Überprüfung
         System.out.println("Generierter areaId-Filter: " + areaIdFilter); // Test-Ausgabe
 
-        finalURL = baseURL + areaIdFilter + RoomsFilter + FromPriceFilter + ToPriceFilter + areaFromFilter + areaToFilter;
+        finalURL = baseURL + areaIdFilter + RoomsFilter + FromPriceFilter + ToPriceFilter + areaFromFilter + areaToFilter + keywordsFilter;
         //String finalURL = baseURL + areaIdFilter;
         System.out.println("Finale Base-URL: " + finalURL);
 
@@ -121,7 +110,7 @@ public class SearchController {
     }
 
     @FXML
-    private void resetFilters() {
+    private void resetFilters(ActionEvent event) {
         // Standardfelder zurücksetzen
         searchField.clear();
         radioWohnung.setSelected(false);
@@ -138,11 +127,10 @@ public class SearchController {
     }
 
     public String getRooms() {
-        // Anzahl der Räume
         String rooms = roomField.getText();
         String amountRooms = "";
         if (rooms != null && !rooms.isEmpty()) {
-            amountRooms = ("&NO_OF_ROOMS_BUCKET=" + roomField.getText() + "X" + roomField.getText());
+            amountRooms = ("&NO_OF_ROOMS_BUCKET=" + rooms + "X" + rooms);
         }
         return finalURL + amountRooms;
     }
@@ -183,8 +171,28 @@ public class SearchController {
         return finalURL + amountSizeTo;
     }
 
-    //Keyword Filter
+    // Keywords als URL-Teil formatieren
+    public String getKeywords() {
+        String keywordsText = searchField.getText();
+        String allKeywords = "";
 
+        if (!keywordsText.isEmpty()){
+            // Keyword-Liste erstellen
+            // Satzzeichen entfernen, Sonderzeichen kodieren und leere Keywords filtern
+            List<String> keywords = Arrays.stream(keywordsText.split("\\s+"))
+                    .map(String::trim)
+                    .map(keyword -> keyword.replaceAll("[^a-zA-Z0-9äöüÄÖÜß]", ""))
+                    .map(keyword -> URLEncoder.encode(keyword, StandardCharsets.UTF_8))
+                    .filter(keyword -> !keyword.isEmpty())
+                    .collect(Collectors.toList());
+
+            // Keywords zur URL hinzufügen
+            for (String keyword : keywords) {
+                allKeywords += "&keyword=" + keyword;
+            }
+        }
+        return finalURL + allKeywords;
+    }
 
     private static void printResults(ArrayList<Immobilie> searchResults) {
         for (Immobilie currentImmobilie : searchResults) {

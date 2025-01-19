@@ -1,7 +1,5 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
-import fhcampus.sunsetcats.fhcampusprog1sunsetcats.DataHandling.WillhabenConnector;
-import fhcampus.sunsetcats.fhcampusprog1sunsetcats.Immobilie;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,8 +17,6 @@ import java.util.Map;
 
 public class ImmoDetailController {
     @FXML
-    private Label labelId;
-    @FXML
     private Label labelHeading;
     @FXML
     private Label labelDescription;
@@ -37,6 +33,10 @@ public class ImmoDetailController {
     @FXML
     private Label labelNumberOfRooms;
     @FXML
+    private Label labelType;
+    @FXML
+    private Label labelFreeAreaType;
+    @FXML
     private Label labelPublished;
     @FXML
     private Button goBack; // Zurück-Button
@@ -45,9 +45,60 @@ public class ImmoDetailController {
 
     private Immobilie immobilie;
 
+    public void initialize() {
+        this.immobilie = ResultStore.getInstance().getSelectedImmo();
+        updateDetails();
+    }
+
+    private void updateDetails() {
+        if (immobilie != null) {
+            // Map der Attribute und zugehörigen Labels
+            Map<Immobilie.AttributeKey, Label> attributeLabelMap = Map.of(
+                    Immobilie.AttributeKey.HEADING, labelHeading,
+                    Immobilie.AttributeKey.BODY_DYN, labelDescription,
+                    Immobilie.AttributeKey.PRICE, labelPrice,
+                    Immobilie.AttributeKey.LOCATION, labelLocation,
+                    Immobilie.AttributeKey.ESTATE_SIZE_TOTAL, labelEstateSize,
+                    Immobilie.AttributeKey.NUMBER_OF_ROOMS, labelNumberOfRooms,
+                    Immobilie.AttributeKey.IMMO_TYPE, labelImmoType,
+                    Immobilie.AttributeKey.FLOOR, labelFloor,
+                    Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished,
+                    Immobilie.AttributeKey.FREE_AREA_TYPE_NAME, labelFreeAreaType
+            );
+
+            // Alle Labels aktualisieren oder ausblenden
+            attributeLabelMap.forEach((key, label) -> {
+                Object value = immobilie.getAttribute(key);
+                if (value != null && !value.toString().isEmpty()) {
+                    label.setText(formatValue(key, value)); // Formatierung je nach Attribut
+                    label.setVisible(true);
+                } else {
+                    label.setVisible(false);
+                }
+            });
+
+            // Bild aktualisieren oder ausblenden
+            Object imageUrl = immobilie.getAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK);
+            if (imageUrl != null && !imageUrl.toString().isEmpty()) {
+                imageView.setImage(new Image(imageUrl.toString(), true));
+                imageView.setVisible(true);
+            } else {
+                imageView.setImage(null);
+                imageView.setVisible(false);
+            }
+        } else {
+            // Keine Immobilie ausgewählt: Alle Elemente ausblenden
+            resetDetailView();
+        }
+    }
+
+    public void goBack(ActionEvent event) {
+        Navigation.loadContent("search-view.fxml");
+    }
+
     public String formatPublishedDate(String isoDate) {
         if (isoDate == null || isoDate.isEmpty()) {
-            return "Unbekannt"; // Rückgabe eines Standardwerts, wenn das Datum nicht verfügbar ist
+            return ""; // Rückgabe eines Standardwerts, wenn das Datum nicht verfügbar ist
         }
 
         // Konvertiere den ISO 8601 String in ein OffsetDateTime Objekt
@@ -75,56 +126,6 @@ public class ImmoDetailController {
         this.immobilie = ResultStore.getInstance().getSelectedImmo();
         System.out.println("Immobilie " + immobilie + " selected");
         updateDetails();
-    }
-
-    public void initialize() {
-        this.immobilie = ResultStore.getInstance().getSelectedImmo();
-        updateDetails();
-    }
-
-    public void goBack(ActionEvent event) {
-        Navigation.loadContent("search-view.fxml");
-    }
-
-    private void updateDetails() {
-        if (immobilie != null) {
-            // Map der Attribute und zugehörigen Labels
-            Map<Immobilie.AttributeKey, Label> attributeLabelMap = Map.of(
-                    Immobilie.AttributeKey.HEADING, labelHeading,
-                    Immobilie.AttributeKey.BODY_DYN, labelDescription,
-                    Immobilie.AttributeKey.PRICE, labelPrice,
-                    Immobilie.AttributeKey.LOCATION, labelLocation,
-                    Immobilie.AttributeKey.ESTATE_SIZE_TOTAL, labelEstateSize,
-                    Immobilie.AttributeKey.NUMBER_OF_ROOMS, labelNumberOfRooms,
-                    Immobilie.AttributeKey.IMMO_TYPE, labelImmoType,
-                    Immobilie.AttributeKey.FLOOR, labelFloor,
-                    Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished
-            );
-
-            // Alle Labels aktualisieren oder ausblenden
-            attributeLabelMap.forEach((key, label) -> {
-                Object value = immobilie.getAttribute(key);
-                if (value != null && !value.toString().isEmpty()) {
-                    label.setText(formatValue(key, value)); // Formatierung je nach Attribut
-                    label.setVisible(true);
-                } else {
-                    label.setVisible(false);
-                }
-            });
-
-            // Bild aktualisieren oder ausblenden
-            Object imageUrl = immobilie.getAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK);
-            if (imageUrl != null && !imageUrl.toString().isEmpty()) {
-                imageView.setImage(new Image(imageUrl.toString(), true));
-                imageView.setVisible(true);
-            } else {
-                imageView.setImage(null);
-                imageView.setVisible(false);
-            }
-        } else {
-            // Keine Immobilie ausgewählt: Alle Elemente ausblenden
-            resetDetailView();
-        }
     }
 
     // Formatierung je nach Attribut
