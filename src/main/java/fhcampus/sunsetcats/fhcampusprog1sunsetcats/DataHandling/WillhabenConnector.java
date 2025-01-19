@@ -19,7 +19,6 @@ import static java.lang.Double.parseDouble;
 
 public class WillhabenConnector extends DataConnector
 {
-
     private static final Logger Debug = Logger.getLogger(WillhabenConnector.class.getName()); //Debug Logger
 
     public WillhabenConnector()
@@ -33,12 +32,6 @@ public class WillhabenConnector extends DataConnector
     // Startpunkt der Suche - Muss ein befülltes Search Objekt übergeben werden
     public ArrayList<Immobilie> startSearch(Search currentSearch) throws IllegalStateException
     {
-        String searchURL = buildURL(currentSearch); // Filter einbeziehen
-        Debug.info("Starting search with URL: " + searchURL);
-
-        // Speichere die generierte URL im Search-Objekt
-        currentSearch.setSearchStartURL(searchURL);
-
         WillhabenScraper scraper = new WillhabenScraper(this, currentSearch); // Jede Suche = Neuer Scraper
         scraper.start();
 
@@ -169,6 +162,7 @@ public class WillhabenConnector extends DataConnector
     }
 
 
+    /*
     // Build Search URL´s from Search Filters
     private String buildURL(Search search) {
         StringBuilder url = new StringBuilder();
@@ -193,7 +187,6 @@ public class WillhabenConnector extends DataConnector
         return url.toString();
     }
 
-    /*
     private String buildURL()
     {
         StringBuilder url = new StringBuilder();
@@ -223,9 +216,7 @@ public class WillhabenConnector extends DataConnector
 
         return url.toString();
     }
-
-
-     */
+    */
 
 
     //===========================================================================|| SIDE FUNCTIONS ||===========================================================================================================

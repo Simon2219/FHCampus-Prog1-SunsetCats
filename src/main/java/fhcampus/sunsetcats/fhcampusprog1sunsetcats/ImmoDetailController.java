@@ -141,6 +141,15 @@ public class ImmoDetailController {
         return value.toString();
     }
 
+    private String parseRoomsBucket(String bucketValue) {
+        if (bucketValue == null || !bucketValue.matches("\\d+X\\d+")) {
+            throw new IllegalArgumentException("Ungültiger Wert für NO_OF_ROOMS_BUCKET: " + bucketValue);
+        }
+        // Teilt "3X3" in ["3", "3"]
+        String[] parts = bucketValue.split("X");
+        return parts[0]; // Rückgabe der Raumanzahl
+    }
+
     // Alle UI-Elemente zurücksetzen
     private void resetDetailView() {
         List<Label> labels = List.of(

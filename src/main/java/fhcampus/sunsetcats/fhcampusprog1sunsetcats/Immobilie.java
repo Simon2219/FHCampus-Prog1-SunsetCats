@@ -48,9 +48,9 @@ public class Immobilie implements Serializable
         FREE_AREA_TYPE("freeAreaType", String.class),
         FREE_AREA_TYPE_NAME("freeAreaTypeName", String.class),
 
-        NUMBER_OF_ROOMS("numberOfRooms", Integer.class),
-        ROOMS("rooms", Integer.class),
-        FLOOR("floor", Integer.class),
+        NUMBER_OF_ROOMS("numberOfRooms", String.class),
+        ROOMS("rooms", String.class),
+        FLOOR("floor", String.class),
         NUMBER_OF_CHILDREN("numberOfChildren", Integer.class),
 
         BODY_DYN("bodyDyn", String.class),
