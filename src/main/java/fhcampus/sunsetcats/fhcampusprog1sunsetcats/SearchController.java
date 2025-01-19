@@ -11,6 +11,7 @@ import org.controlsfx.control.CheckComboBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static fhcampus.sunsetcats.fhcampusprog1sunsetcats.AppMain.willhabenConnector;
 
@@ -74,7 +75,7 @@ public class SearchController {
     @FXML
     private void startSearch() {
         // Standard-BaseURL
-        String baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote";
+        String baseURL = "https://www.willhaben.at/iad/immobilien";
         if (radioMiete.isSelected()) {
             baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote";
         } else if (radioEigentum.isSelected()) {
@@ -131,8 +132,7 @@ public class SearchController {
             search.addSearchFilter("PROPERTY_TYPE_HOUSE=true");
         }
 
-        /*
-        // Art (Miete/Eigentum)
+        /* Art (Miete/Eigentum)
         if (radioMiete.isSelected()) {
             search.addSearchFilter("adTypeId=2"); // Beispielwert für Miete
         } else if (radioEigentum.isSelected()) {
@@ -171,10 +171,16 @@ public class SearchController {
             search.addSearchFilter("NO_OF_ROOMS_BUCKET=" + rooms + "X" + rooms);
         }
 
-        // Ausgewählte Bezirke/Bundesländer hinzufügen
+        // Ausgewählte Bezirke
         List<String> selectedDistricts = districtCheckComboBox.getCheckModel().getCheckedItems();
         if (!selectedDistricts.isEmpty()) {
             search.addSearchFilter("districts=" + String.join(",", selectedDistricts));
+        }
+
+        // Ausgewählte Bundesländer ("areaId")
+        String areaIdFilter = generateAreaIdString();
+        if (!areaIdFilter.isEmpty()) {
+            search.addSearchFilter(areaIdFilter);
         }
 
         debugLogger.info("Applied Filters: " + search.getSearchFilters());
@@ -255,8 +261,58 @@ public class SearchController {
         districtCheckComboBox.getItems().setAll(combinedDistricts);
     }
 
+    /**
+     * Generiert den "areaId=<Nummer>"-String für die ausgewählten Bundesländer
+     * und verknüpft diese mit "&".
+     *
+     * @return Ein String mit den verknüpften "areaId=<Nummer>"-Werten.
+     */
+    private String generateAreaIdString() {
+        List<String> selectedStates = locationCheckComboBox.getCheckModel().getCheckedItems();
 
-    // Methode für Bezirke in Wien
+        if (selectedStates.isEmpty()) {
+            return "areaId=9"; // Standardwert für Wien
+        }
+
+        return selectedStates.stream()
+                .map(this::getAreaIdStringForState) // Konvertiere jedes ausgewählte Bundesland
+                .filter(id -> !id.isEmpty()) // Entferne ungültige Werte
+                .collect(Collectors.joining("&")); // Verknüpfe mit "&"
+    }
+
+    /**
+     * Gibt den entsprechenden "areaId=<Nummer>"-String für ein Bundesland zurück.
+     *
+     * @param state Der Name des Bundeslands.
+     * @return Der "areaId=<Nummer>"-String oder ein leerer String bei ungültiger Eingabe.
+     */
+    private String getAreaIdStringForState(String state) {
+        switch (state) {
+            case "Burgenland":
+                return "areaId=1";
+            case "Kärnten":
+                return "areaId=2";
+            case "Niederösterreich":
+                return "areaId=3";
+            case "Oberösterreich":
+                return "areaId=4";
+            case "Salzburg":
+                return "areaId=5";
+            case "Steiermark":
+                return "areaId=6";
+            case "Tirol":
+                return "areaId=7";
+            case "Vorarlberg":
+                return "areaId=8";
+            case "Wien":
+                return "areaId=9";
+            default:
+                return ""; // Kein gültiges Bundesland
+        }
+    }
+
+    // Methoden für Bezirke
+
     private List<String> getDistrictsForWien() {
         return List.of(
                 "1. Innere Stadt", "2. Leopoldstadt", "3. Landstraße", "4. Wieden", "5. Margareten",
@@ -267,7 +323,6 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke in Niederösterreich
     private List<String> getDistrictsForNiederoesterreich() {
         return List.of(
                 "Amstetten", "Baden", "Bruck an der Leitha", "Gänserndorf", "Gmünd",
@@ -279,7 +334,6 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke im Burgenland
     private List<String> getDistrictsForBurgenland() {
         return List.of(
                 "Eisenstadt (Stadt)", "Eisenstadt-Umgebung", "Güssing", "Jennersdorf",
@@ -287,7 +341,6 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke in Oberösterreich
     private List<String> getDistrictsForOberoesterreich() {
         return List.of(
                 "Linz (Stadt)", "Linz-Land", "Braunau am Inn", "Eferding", "Freistadt",
@@ -297,7 +350,6 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke in der Steiermark
     private List<String> getDistrictsForSteiermark() {
         return List.of(
                 "Graz (Stadt)", "Graz-Umgebung", "Deutschlandsberg",
@@ -306,7 +358,6 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke in Kärnten
     private List<String> getDistrictsForKaernten() {
         return List.of(
                 "Klagenfurt am Wörthersee (Stadt)", "Klagenfurt-Land",
@@ -316,7 +367,6 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke in Salzburg
     private List<String> getDistrictsForSalzburg() {
         return List.of(
                 "Salzburg (Stadt)", "Salzburg-Umgebung", "Hallein",
@@ -324,7 +374,6 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke in Tirol
     private List<String> getDistrictsForTirol() {
         return List.of(
                 "Innsbruck (Stadt)", "Innsbruck-Land", "Imst", "Kitzbühel",
@@ -332,11 +381,9 @@ public class SearchController {
         );
     }
 
-    // Methode für Bezirke in Vorarlberg
     private List<String> getDistrictsForVorarlberg() {
         return List.of(
                 "Bregenz", "Dornbirn", "Feldkirch", "Bludenz"
         );
     }
-
 }
