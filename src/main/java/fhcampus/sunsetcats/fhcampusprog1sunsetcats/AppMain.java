@@ -30,6 +30,11 @@ public class AppMain extends Application
         // CSS laden
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
+        // Fenstergröße festlegen
+        stage.setWidth(1000); // Breite
+        stage.setHeight(800); // Höhe
+
+        // Fenster-Titel
         stage.setTitle("Sunset Cats Immobilien");
         stage.setScene(scene);
         stage.show();
@@ -41,9 +46,9 @@ public class AppMain extends Application
         launch();
 
         // Debug.info("Application started");
-        // runSearch();
     }
 
+    /*
     private static void runSearch()
     {
         try
@@ -73,7 +78,7 @@ public class AppMain extends Application
             Debug.severe("Unexpected error during search!");
             Debug.info(e.getMessage());
         }
-    }
+    }*/
 
 
     private static void printResults(ArrayList<Immobilie> searchResults)

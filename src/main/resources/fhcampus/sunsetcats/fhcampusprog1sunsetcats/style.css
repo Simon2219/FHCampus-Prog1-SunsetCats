@@ -81,3 +81,17 @@ gelb: #dafe45
 hover gelb: #dafecf
 rot: #e42821
 */
+
+/* --- Scrollbars unsichtbar machen --- */
+
+/* Unsichtbare vertikale Scrollbar */
+.scroll-pane .scroll-bar:vertical {
+    -fx-opacity: 0; /* Unsichtbar machen */
+    -fx-pref-width: 0; /* Breite auf 0 setzen */
+}
+
+/* Unsichtbare horizontale Scrollbar */
+.scroll-pane .scroll-bar:horizontal {
+    -fx-opacity: 0; /* Unsichtbar machen */
+    -fx-pref-height: 0; /* Höhe auf 0 setzen */
+}

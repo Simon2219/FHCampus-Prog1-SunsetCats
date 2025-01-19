@@ -55,7 +55,6 @@ public class UIController {
     void displaySearch() {
         Navigation.loadContent("search-view.fxml");
         Stage stage = (Stage) dynamicContentArea.getScene().getWindow();
-        stage.sizeToScene();
     }
 
     @FXML

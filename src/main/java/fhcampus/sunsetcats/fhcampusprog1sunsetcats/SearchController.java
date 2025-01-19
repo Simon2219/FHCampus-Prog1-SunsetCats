@@ -234,24 +234,22 @@ public class SearchController {
     }
 
     private void setupDropdownVisibilityLogic() {
-        // Wenn die Auswahl der Bundesländer geändert wird
+        // Listener für die Auswahl in der locationCheckComboBox (Bundesländer)
         locationCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
-            updateDistrictDropdownVisibility(); // Aktualisiert die Sichtbarkeit des Bezirks-Dropdowns
+            // Leere die Bezirke, wenn das Bundesland geändert wird
+            districtCheckComboBox.getCheckModel().clearChecks();
 
-            // Generieren der areaId basierend auf der aktuellen Auswahl
-            String areaIdFilter = generateAreaOrDistrictIdString();
+            // Aktualisiere die Sichtbarkeit der Bezirksauswahl basierend auf dem ausgewählten Bundesland
+            updateDistrictDropdownVisibility();
 
-            //Testing
-            System.out.println("Generierter areaId-String: " + areaIdFilter);
+            // Test-Ausgabe (debugging)
+            System.out.println("Bundesland geändert - Bezirke wurden geleert.");
         });
 
-        // Wenn die Auswahl der Bezirke geändert wird
+        // Listener für die Auswahl in der districtCheckComboBox (Bezirke)
         districtCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
-            // Generieren der areaId basierend auf der aktuellen Auswahl der Bezirke
-            String areaIdFilter = generateAreaOrDistrictIdString();
-
-            //Testing
-            System.out.println("Generierter areaId-String (nach Bezirksauswahl): " + areaIdFilter);
+            // Optional: Aktionen bei Änderung der Bezirksauswahl (falls benötigt)
+            System.out.println("Bezirksauswahl geändert.");
         });
     }
 

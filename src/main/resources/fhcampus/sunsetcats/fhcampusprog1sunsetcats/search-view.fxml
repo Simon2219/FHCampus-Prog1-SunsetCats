@@ -9,77 +9,81 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckComboBox?>
+<?import javafx.scene.control.ScrollPane?>
 
 <BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.SearchController">
 
     <!-- Filter-Bereich auf der linken Seite -->
     <left>
-        <VBox prefWidth="300" spacing="15" style="-fx-background-color: #F4F4F4; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
-            <padding>
-                <Insets bottom="20" left="20" right="20" top="20" />
-            </padding>
+        <!-- ScrollPane um den gesamten Filterbereich -->
+        <ScrollPane fitToWidth="true" style="-fx-padding: 10;">
+            <VBox prefWidth="300" spacing="15" style="-fx-background-color: #F4F4F4; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
 
-            <!-- Titel für den Filterbereich -->
-            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Filter" />
+                <!-- Titel für den Filterbereich -->
+                <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Filter" />
 
-            <!-- Suchfeld für Schlagwörter -->
-            <TextField fx:id="searchField" promptText=" Keywords eingeben" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                <!-- Suchfeld für Schlagwörter -->
+                <TextField fx:id="searchField" promptText=" Keywords eingeben" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
 
-            <!-- Typ der Immobilie -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Immobilientyp:" />
-            <RadioButton fx:id="radioWohnung" style="-fx-font-size: 14px;" text="Wohnung" />
-            <RadioButton fx:id="radioHaus" style="-fx-font-size: 14px;" text="Haus" />
+                <!-- Typ der Immobilie -->
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Immobilientyp:" />
+                <RadioButton fx:id="radioWohnung" style="-fx-font-size: 14px;" text="Wohnung" />
+                <RadioButton fx:id="radioHaus" style="-fx-font-size: 14px;" text="Haus" />
 
-            <!-- Art (Miete/Eigentum) -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Art:" />
-            <RadioButton fx:id="radioMiete" style="-fx-font-size: 14px;" text="Miete" />
-            <RadioButton fx:id="radioEigentum" style="-fx-font-size: 14px;" text="Eigentum" />
+                <!-- Art (Miete/Eigentum) -->
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Art:" />
+                <RadioButton fx:id="radioMiete" style="-fx-font-size: 14px;" text="Miete" />
+                <RadioButton fx:id="radioEigentum" style="-fx-font-size: 14px;" text="Eigentum" />
 
-            <!-- Standort -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Standort:" />
-            <VBox>
-                <CheckComboBox fx:id="locationCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-                <Label text="Bundesland auswählen"
-                       style="-fx-font-size: 14px; -fx-font-style: italic; -fx-text-fill: #AAAAAA; -fx-padding: 10;"
-                       alignment="CENTER_LEFT"
-                       visible="true"
-                       fx:id="placeholderLabel" />
+                <!-- Standort -->
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Standort:" />
+                <VBox>
+                    <CheckComboBox fx:id="locationCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                    <Label text="Bundesland auswählen"
+                           style="-fx-font-size: 14px; -fx-font-style: italic; -fx-text-fill: #AAAAAA; -fx-padding: 10;"
+                           alignment="CENTER_LEFT"
+                           visible="true"
+                           fx:id="placeholderLabel" />
+                </VBox>
+
+                <!-- ZUSÄTZLICHES DROPDOWN BEZIRKE -->
+                <VBox fx:id="districtDropdownContainer" spacing="10" visible="false" managed="false">
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Bezirk auswählen:" />
+                    <CheckComboBox fx:id="districtCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                </VBox>
+
+                <!-- Anzahl der Räume -->
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Zimmer:" />
+                <TextField fx:id="roomField" prefWidth="100" promptText="Anzahl" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+
+                <!-- Preis -->
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Preis (in €):" />
+                <HBox spacing="10">
+                    <TextField fx:id="priceFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                    <TextField fx:id="priceToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                </HBox>
+                <!-- Fläche -->
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
+                <HBox spacing="10">
+                    <TextField fx:id="areaFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                    <TextField fx:id="areaToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                </HBox>
+
+                <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">
+                    <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="65.0">
+                            <children>
+                                <Button fx:id="resetFilters" mnemonicParsing="false" onAction="#resetFilters" text="Zurücksetzen" />
+                                <Button fx:id="startSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
             </VBox>
-
-            <!-- ZUSÄTZLICHES DROPDOWN BEZIRKE -->
-            <VBox fx:id="districtDropdownContainer" spacing="10" visible="false" managed="false">
-                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Bezirk auswählen:" />
-                <CheckComboBox fx:id="districtCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-            </VBox>
-
-            <!-- Anzahl der Räume -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Zimmer:" />
-            <TextField fx:id="roomField" prefWidth="100" promptText="Anzahl" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-
-            <!-- Preis -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Preis (in €):" />
-            <HBox spacing="10">
-                <TextField fx:id="priceFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-                <TextField fx:id="priceToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-            </HBox>
-            <!-- Fläche -->
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
-            <HBox spacing="10">
-                <TextField fx:id="areaFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-                <TextField fx:id="areaToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
-            </HBox>
-
-            <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">
-                <children>
-                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="65.0">
-                        <children>
-                            <Button fx:id="resetFilters" mnemonicParsing="false" onAction="#resetFilters" text="Zurücksetzen" />
-                            <Button fx:id="startSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" />
-                        </children>
-                    </HBox>
-                </children>
-            </VBox>
-        </VBox>
+        </ScrollPane>
     </left>
 
     <!-- Ergebnisse-Bereich in der Mitte -->
