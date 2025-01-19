@@ -7,13 +7,14 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.CheckComboBox;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 import static fhcampus.sunsetcats.fhcampusprog1sunsetcats.AppMain.willhabenConnector;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class SearchController {
 
@@ -208,8 +209,20 @@ public class SearchController {
     }
 
     private void setupDropdownVisibilityLogic() {
+        // Wenn die Auswahl der Bundesländer geändert wird
         locationCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
-            updateDistrictDropdownVisibility();
+            updateDistrictDropdownVisibility(); // Aktualisiert die Sichtbarkeit des Bezirks-Dropdowns
+
+            // Generieren der areaId basierend auf der aktuellen Auswahl
+            String areaIdFilter = generateAreaOrDistrictIdString();
+            System.out.println("Generierter areaId-String: " + areaIdFilter);
+        });
+
+        // Wenn die Auswahl der Bezirke geändert wird
+        districtCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
+            // Generieren der areaId basierend auf der aktuellen Auswahl der Bezirke
+            String areaIdFilter = generateAreaOrDistrictIdString();
+            System.out.println("Generierter areaId-String (nach Bezirksauswahl): " + areaIdFilter);
         });
     }
 
@@ -309,6 +322,72 @@ public class SearchController {
             default:
                 return ""; // Kein gültiges Bundesland
         }
+    }
+
+    /**
+     * Generiert den passenden areaId-String, abhängig von der Auswahl der Bezirke oder der Bundesländer.
+     * Wenn Bezirke ausgewählt wurden, wird der String für die Bezirke erzeugt.
+     * Ansonsten wird die areaId des Bundeslands verwendet.
+     */
+    private String generateAreaOrDistrictIdString() {
+        // Mapping abh. vom Bundesland
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.putAll(getDistrictIdsForNiederoesterreich());
+        districtIds.putAll(getDistrictIdsForVorarlberg());
+
+        List<String> selectedDistricts = districtCheckComboBox.getCheckModel().getCheckedItems();
+
+        if (!selectedDistricts.isEmpty()) {
+            return selectedDistricts.stream()
+                    .map(districtIds::get)
+                    .filter(Objects::nonNull)
+                    .map(id -> "areaId=" + id)
+                    .collect(Collectors.joining("&"));
+        }
+
+        return generateAreaIdString();
+    }
+
+    /**
+     * Gibt die Map mit den IDs aller Bezirke in Niederösterreich zurück.
+     * Die IDs hier sind dreistellig, wobei die erste Zahl (z. B. "3") verwendet wird.
+     */
+    private Map<String, String> getDistrictIdsForNiederoesterreich() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Amstetten", "301");
+        districtIds.put("Baden", "306");
+        districtIds.put("Bruck an der Leitha", "307");
+        districtIds.put("Gänserndorf", "308");
+        districtIds.put("Gmünd", "309");
+        districtIds.put("Hollabrunn", "310");
+        districtIds.put("Horn", "311");
+        districtIds.put("Korneuburg", "312");
+        districtIds.put("Krems an der Donau (Stadt)", "313");
+        districtIds.put("Krems-Land", "314");
+        districtIds.put("Lilienfeld", "315");
+        districtIds.put("Melk", "316");
+        districtIds.put("Mistelbach", "317");
+        districtIds.put("Mödling", "318");
+        districtIds.put("Neunkirchen", "320");
+        districtIds.put("St. Pölten (Stadt)", "321");
+        districtIds.put("St. Pölten-Land", "322");
+        districtIds.put("Scheibbs", "323");
+        districtIds.put("Tulln", "324");
+        districtIds.put("Waidhofen an der Thaya", "325");
+        districtIds.put("Waidhofen an der Ybbs (Stadt)", "326");
+        districtIds.put("Wiener Neustadt (Stadt)", "329");
+        districtIds.put("Wiener Neustadt-Land", "330");
+        districtIds.put("Zwettl", "332");
+        return districtIds;
+    }
+
+    private Map<String, String> getDistrictIdsForVorarlberg() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Bregenz", "802");
+        districtIds.put("Dornbirn", "803");
+        districtIds.put("Feldkirch", "804");
+        districtIds.put("Bludenz", "801");
+        return districtIds;
     }
 
     // Methoden für Bezirke
