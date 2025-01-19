@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SearchController {
+    String baseURL = "https://www.willhaben.at/iad/immobilien";
+    String finalURL = "";
 
     // Standard-Felder für die Filtersuche
     @FXML
@@ -52,6 +54,12 @@ public class SearchController {
     @FXML
     private TextField roomField;
 
+    @FXML
+    private TextField areaFromField;
+
+    @FXML
+    private TextField areaToField;
+
     // Neue Felder für Bundesländer und Bezirke
     @FXML
     private VBox districtDropdownContainer; // Container für Bezirke/Behörden
@@ -75,9 +83,6 @@ public class SearchController {
 
     @FXML
     private void startSearch() {
-        //BaseURL
-        String baseURL = "https://www.willhaben.at/iad/immobilien";
-
         // Wohnung und Haus mit Miete/Eigentum prüfen und URL entsprechend setzen
         if (radioWohnung.isSelected() && radioMiete.isSelected()) {
             baseURL += "/mietwohnungen/mietwohnung-angebote?";
@@ -90,30 +95,21 @@ public class SearchController {
         }
         // Generiere den areaId-Filter basierend auf den ausgewählten Bezirken oder Bundesländern
         String areaIdFilter = generateAreaOrDistrictIdString();
+        String RoomsFilter = getRooms();
+        String FromPriceFilter = getPriceFrom();
+        String ToPriceFilter = getPriceTo();
+        String areaFromFilter = getSizeFrom();
+        String areaToFilter = getSizeTo();
+
 
         // Test: Print der areaIdFilter zur Überprüfung
         System.out.println("Generierter areaId-Filter: " + areaIdFilter); // Test-Ausgabe
 
-        // Base-URL zur Anzeige der finalen URL
-        String finalURL = baseURL + areaIdFilter;
+        finalURL = baseURL + areaIdFilter + RoomsFilter + FromPriceFilter + ToPriceFilter + areaFromFilter + areaToFilter;
+        //String finalURL = baseURL + areaIdFilter;
         System.out.println("Finale Base-URL: " + finalURL);
 
-        /*
-        if (radioMiete.isSelected()) {
-            baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote";
-        } else if (radioEigentum.isSelected()) {
-            baseURL = "https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote";
-        }
-        */
-
-
-
-
-
         Search searchImmo = new Search(finalURL, false);
-
-        // Filter anwenden
-        processFilters(searchImmo);
 
         // Suche ausführen
         ArrayList<Immobilie> results = willhabenConnector.startSearch(searchImmo);
@@ -144,86 +140,51 @@ public class SearchController {
     public String getRooms() {
         // Anzahl der Räume
         String rooms = roomField.getText();
-        String amountRooms = null;
+        String amountRooms = "";
         if (rooms != null && !rooms.isEmpty()) {
             amountRooms = ("&NO_OF_ROOMS_BUCKET=" + roomField.getText() + "X" + roomField.getText());
         }
-        return amountRooms;
+        return finalURL + amountRooms;
     }
 
-    /**
-     * Verarbeitet die Benutzereingaben und fügt Filter in das `Search`-Objekt ein.
-     *
-     * @param search Das zu bearbeitende `Search`-Objekt.
-     */
-
-
-
-    private void processFilters(Search search) {
-        // Keywords
-        String keyword = searchField.getText();
-        if (keyword != null && !keyword.isEmpty()) {
-            search.addSearchFilter("keyword=" + keyword.replace(" ", "+"));
-        }
-
-        /*
-        // Immobilientyp
-        if (radioWohnung.isSelected()) {
-            search.addSearchFilter("PROPERTY_TYPE_FLAT=true");
-        } else if (radioHaus.isSelected()) {
-            search.addSearchFilter("PROPERTY_TYPE_HOUSE=true");
-        }
-
-        //Art (Miete/Eigentum)
-        if (radioMiete.isSelected()) {
-            search.addSearchFilter("adTypeId=2"); // Beispielwert für Miete
-        } else if (radioEigentum.isSelected()) {
-            search.addSearchFilter("adTypeId=1"); // Beispielwert für Eigentum
-        }
-         */
-
-        // Preisbereich
+    public String getPriceFrom() {
         String priceFrom = priceFromField.getText();
+        String amountPriceFrom = "";
         if (priceFrom != null && !priceFrom.isEmpty()) {
-            search.addSearchFilter("PRICE_FROM=" + priceFrom);
+            amountPriceFrom = ("&PRICE_FROM=" + priceFrom);
         }
-
-        String priceTo = priceToField.getText();
-        if (priceTo != null && !priceTo.isEmpty()) {
-            search.addSearchFilter("PRICE_TO=" + priceTo);
-        }
-
-        /* Anzahl der Räume
-        String rooms = roomField.getText();
-        if (rooms != null && !rooms.isEmpty()) {
-            try {
-                int roomCount = Integer.parseInt(rooms.trim()); // Validierung der Eingabe als Zahl
-                search.setMinRooms(roomCount); // Setze sowohl minRooms ...
-                search.setMaxRooms(roomCount); // ... als auch maxRooms
-            } catch (NumberFormatException e) {
-                Debug.warning("Ungültige Eingabe für Räume: " + rooms);
-                return; // Abbrechen, wenn die Eingabe ungültig ist
-            }
-        }
-         */
-
-
-
-        /*
-        // Ausgewählte Bezirke
-        List<String> selectedDistricts = districtCheckComboBox.getCheckModel().getCheckedItems();
-        if (!selectedDistricts.isEmpty()) {
-            //search.addSearchFilter("districts=" + String.join(",", selectedDistricts));
-        }
-
-        // Ausgewählte Bundesländer ("areaId")
-        String areaIdFilter = generateAreaIdString();
-        if (!areaIdFilter.isEmpty()) {
-            search.addSearchFilter(areaIdFilter);
-        }*/
-
-        debugLogger.info("Applied Filters: " + search.getSearchFilters());
+        return finalURL + amountPriceFrom;
     }
+
+    public String getPriceTo() {
+        String priceTo = priceToField.getText();
+        String amountPriceTo = "";
+        if (priceTo != null && !priceTo.isEmpty()) {
+            amountPriceTo = ("&PRICE_TO=" + priceTo);
+        }
+        return finalURL + amountPriceTo;
+    }
+
+    public String getSizeFrom() {
+        String sizeFrom = areaFromField.getText();
+        String amountSizeFrom = "";
+        if (sizeFrom != null && !sizeFrom.isEmpty()) {
+            amountSizeFrom = ("&ESTATE_SIZE/LIVING_AREA_FROM=" + sizeFrom);
+        }
+        return finalURL + amountSizeFrom;
+    }
+
+    public String getSizeTo() {
+        String sizeTo = areaToField.getText();
+        String amountSizeTo = "";
+        if (sizeTo != null && !sizeTo.isEmpty()) {
+            amountSizeTo = ("&ESTATE_SIZE/LIVING_AREA_TO=" + sizeTo);
+        }
+        return finalURL + amountSizeTo;
+    }
+
+    //Keyword Filter
+
 
     private static void printResults(ArrayList<Immobilie> searchResults) {
         for (Immobilie currentImmobilie : searchResults) {
