@@ -334,6 +334,13 @@ public class SearchController {
         Map<String, String> districtIds = new HashMap<>();
         districtIds.putAll(getDistrictIdsForNiederoesterreich());
         districtIds.putAll(getDistrictIdsForVorarlberg());
+        districtIds.putAll(getDistrictIdsForBurgenland());
+        districtIds.putAll(getDistrictIdsForKaernten());
+        districtIds.putAll(getDistrictIdsForOberoesterreich());
+        districtIds.putAll(getDistrictIdsForSalzburg());
+        districtIds.putAll(getDistrictIdsForSteiermark());
+        districtIds.putAll(getDistrictIdsForTirol());
+        districtIds.putAll(getDistrictIdsForWien());
 
         List<String> selectedDistricts = districtCheckComboBox.getCheckModel().getCheckedItems();
 
@@ -352,6 +359,36 @@ public class SearchController {
      * Gibt die Map mit den IDs aller Bezirke in Niederösterreich zurück.
      * Die IDs hier sind dreistellig, wobei die erste Zahl (z. B. "3") verwendet wird.
      */
+
+    private Map<String, String> getDistrictIdsForBurgenland() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Eisenstadt", "101");
+        districtIds.put("Eisenstadt - Umgebung", "103");
+        districtIds.put("Güssing", "104");
+        districtIds.put("Jennersdorf", "105");
+        districtIds.put("Mattersburg", "106");
+        districtIds.put("Neusiedl am See", "107");
+        districtIds.put("Oberpullendorf", "108");
+        districtIds.put("Oberwart", "109");
+        districtIds.put("Rust (Stadt)", "102");
+        return districtIds;
+    }
+
+    private Map<String, String> getDistrictIdsForKaernten() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Feldkirchen", "210");
+        districtIds.put("Hermagor", "203");
+        districtIds.put("Klagenfurt", "201");
+        districtIds.put("Klagenfurt Land", "304");
+        districtIds.put("Sankt Veit an der Glan", "205");
+        districtIds.put("Spittal an der Drau", "206");
+        districtIds.put("Villach", "202");
+        districtIds.put("Villach Land", "207");
+        districtIds.put("Völkermarkt", "208");
+        districtIds.put("Wolfsberg", "209");
+        return districtIds;
+    }
+
     private Map<String, String> getDistrictIdsForNiederoesterreich() {
         Map<String, String> districtIds = new HashMap<>();
         districtIds.put("Amstetten", "301");
@@ -381,6 +418,100 @@ public class SearchController {
         return districtIds;
     }
 
+    private Map<String, String> getDistrictIdsForOberoesterreich() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Braunau am Inn", "404");
+        districtIds.put("Eferding", "405");
+        districtIds.put("Freistadt", "406");
+        districtIds.put("Gmunden", "407");
+        districtIds.put("Grieskirchen", "408");
+        districtIds.put("Kirchdorf an der Krems", "409");
+        districtIds.put("Linz", "401");
+        districtIds.put("Linz Land", "410");
+        districtIds.put("Perg", "411");
+        districtIds.put("Ried im Innkreis", "412");
+        districtIds.put("Rohrbach", "413");
+        districtIds.put("Schärding", "414");
+        districtIds.put("Steyr", "402");
+        districtIds.put("Steyr-Land", "415");
+        districtIds.put("Urfahr-Umgebung", "416");
+        districtIds.put("Vöcklabruck", "417");
+        districtIds.put("Wels", "403");
+        districtIds.put("Wels-Land", "418");
+        return districtIds;
+    }
+
+    private Map<String, String> getDistrictIdsForSalzburg() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Hallein", "502");
+        districtIds.put("Salzburg Stadt", "501");
+        districtIds.put("Salzburg-Umgebung", "503");
+        districtIds.put("Sankt Johann im Pongau", "504");
+        districtIds.put("Tamsweg", "505");
+        districtIds.put("Zell am See", "506");
+        return districtIds;
+    }
+
+    private Map<String, String> getDistrictIdsForSteiermark() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Bruck-Mürzzuschlag", "621");
+        districtIds.put("Deutschlandsberg", "603");
+        districtIds.put("Graz", "601");
+        districtIds.put("Graz-Umgebung", "606");
+        districtIds.put("Hartberg-Fürstenfeld", "622");
+        districtIds.put("Leibnitz", "610");
+        districtIds.put("Leoben", "611");
+        districtIds.put("Liezen", "612");
+        districtIds.put("Murau", "614");
+        districtIds.put("Murtal", "620");
+        districtIds.put("Südoststeiermark", "623");
+        districtIds.put("Voitsberg", "616");
+        districtIds.put("Weiz", "617");
+        return districtIds;
+    }
+
+    private Map<String, String> getDistrictIdsForTirol() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("Imst", "702");
+        districtIds.put("Innsbruck", "701");
+        districtIds.put("Innsbruck-Land", "703");
+        districtIds.put("Kitzbühel", "704");
+        districtIds.put("Kufstein", "705");
+        districtIds.put("Landeck", "706");
+        districtIds.put("Lienz", "707");
+        districtIds.put("Reutte", "708");
+        districtIds.put("Schwaz", "709");
+        return districtIds;
+    }
+
+    private Map<String, String> getDistrictIdsForWien() {
+        Map<String, String> districtIds = new HashMap<>();
+        districtIds.put("01. Bezirk, Innere Stadt", "117223");
+        districtIds.put("02. Bezirk, Leopoldstadt", "117224");
+        districtIds.put("03. Bezirk, Landstraße", "117225");
+        districtIds.put("04. Bezirk, Wieden", "117226");
+        districtIds.put("05. Bezirk, Margareten", "117227");
+        districtIds.put("06. Bezirk, Mariahilf", "117228");
+        districtIds.put("07. Bezirk, Neubau", "117229");
+        districtIds.put("08. Bezirk, Josefstadt", "117230");
+        districtIds.put("09. Bezirk, Alsergrund", "117231");
+        districtIds.put("10. Bezirk, Favoriten", "117232");
+        districtIds.put("11. Bezirk, Simmering", "117233");
+        districtIds.put("12. Bezirk, Meidling", "117234");
+        districtIds.put("13. Bezirk, Hietzing", "117235");
+        districtIds.put("14. Bezirk, Penzing", "117236");
+        districtIds.put("15. Bezirk, Rudolfsheim-Fünfhaus", "117237");
+        districtIds.put("16. Bezirk, Ottakring", "117238");
+        districtIds.put("17. Bezirk, Hernals", "117239");
+        districtIds.put("18. Bezirk, Währing", "117240");
+        districtIds.put("19. Bezirk, Döbling", "117241");
+        districtIds.put("20. Bezirk, Brigittenau", "117242");
+        districtIds.put("21. Bezirk, Floridsdorf", "117243");
+        districtIds.put("22. Bezirk, Donaustadt", "117244");
+        districtIds.put("23. Bezirk, Liesing", "117245");
+        return districtIds;
+    }
+
     private Map<String, String> getDistrictIdsForVorarlberg() {
         Map<String, String> districtIds = new HashMap<>();
         districtIds.put("Bregenz", "802");
@@ -390,15 +521,18 @@ public class SearchController {
         return districtIds;
     }
 
+
     // Methoden für Bezirke
 
     private List<String> getDistrictsForWien() {
         return List.of(
-                "1. Innere Stadt", "2. Leopoldstadt", "3. Landstraße", "4. Wieden", "5. Margareten",
-                "6. Mariahilf", "7. Neubau", "8. Josefstadt", "9. Alsergrund", "10. Favoriten",
-                "11. Simmering", "12. Meidling", "13. Hietzing", "14. Penzing", "15. Rudolfsheim-Fünfhaus",
-                "16. Ottakring", "17. Hernals", "18. Währing", "19. Döbling", "20. Brigittenau",
-                "21. Floridsdorf", "22. Donaustadt", "23. Liesing"
+                "01. Bezirk, Innere Stadt",
+                "02. Bezirk, Leopoldstadt", "03. Bezirk, Landstraße", "04. Bezirk, Wieden", "05. Bezirk, Margareten",
+                "06. Bezirk, Mariahilf", "07. Bezirk, Neubau", "08. Bezirk, Josefstadt", "09. Bezirk, Alsergrund",
+                "10. Bezirk, Favoriten", "11. Bezirk, Simmering", "12. Bezirk, Meidling", "13. Bezirk, Hietzing",
+                "14. Bezirk, Penzing", "15. Bezirk, Rudolfsheim-Fünfhaus", "16. Bezirk, Ottakring", "17. Bezirk, Hernals",
+                "18. Bezirk, Währing", "19. Bezirk, Döbling", "20. Bezirk, Brigittenau", "21. Bezirk, Floridsdorf",
+                "22. Bezirk, Donaustadt", "23. Bezirk, Liesing"
         );
     }
 
