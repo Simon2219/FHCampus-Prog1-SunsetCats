@@ -31,7 +31,7 @@ public class AppMain extends Application
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         // Fenstergröße festlegen
-        stage.setWidth(1000); // Breite
+        stage.setWidth(1200); // Breite
         stage.setHeight(800); // Höhe
 
         // Fenster-Titel
