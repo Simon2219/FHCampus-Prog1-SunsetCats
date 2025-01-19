@@ -75,15 +75,38 @@ public class SearchController {
 
     @FXML
     private void startSearch() {
-        // Standard-BaseURL
+        //BaseURL
         String baseURL = "https://www.willhaben.at/iad/immobilien";
+
+        // Wohnung und Haus mit Miete/Eigentum prüfen und URL entsprechend setzen
+        if (radioWohnung.isSelected() && radioMiete.isSelected()) {
+            baseURL += "/mietwohnungen/mietwohnung-angebote?";
+        } else if (radioWohnung.isSelected() && radioEigentum.isSelected()) {
+            baseURL += "/eigentumswohnung/eigentumswohnung-angebote?";
+        } else if (radioHaus.isSelected() && radioMiete.isSelected()) {
+            baseURL += "/haus-mieten/haus-angebote?";
+        } else if (radioHaus.isSelected() && radioEigentum.isSelected()) {
+            baseURL += "/haus-kaufen/haus-angebote?";
+        }
+        // Generiere den areaId-Filter basierend auf den ausgewählten Bezirken oder Bundesländern
+        String areaIdFilter = generateAreaOrDistrictIdString();
+
+        // Test: Print der areaIdFilter zur Überprüfung
+        System.out.println("Generierter areaId-Filter: " + areaIdFilter); // Test-Ausgabe
+
+        // Base-URL zur Anzeige der finalen URL
+        System.out.println("Finale Base-URL: " + baseURL + areaIdFilter);
+        String finalURL = baseURL + areaIdFilter;
+
+        /*
         if (radioMiete.isSelected()) {
             baseURL = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote";
         } else if (radioEigentum.isSelected()) {
             baseURL = "https://www.willhaben.at/iad/immobilien/haus-kaufen/haus-angebote";
         }
+        */
 
-        Search searchImmo = new Search(baseURL, false);
+        Search searchImmo = new Search(finalURL, false);
 
         // Filter anwenden
         processFilters(searchImmo);
@@ -126,6 +149,7 @@ public class SearchController {
             search.addSearchFilter("keyword=" + keyword.replace(" ", "+"));
         }
 
+        /*
         // Immobilientyp
         if (radioWohnung.isSelected()) {
             search.addSearchFilter("PROPERTY_TYPE_FLAT=true");
@@ -133,7 +157,7 @@ public class SearchController {
             search.addSearchFilter("PROPERTY_TYPE_HOUSE=true");
         }
 
-        /* Art (Miete/Eigentum)
+        //Art (Miete/Eigentum)
         if (radioMiete.isSelected()) {
             search.addSearchFilter("adTypeId=2"); // Beispielwert für Miete
         } else if (radioEigentum.isSelected()) {
@@ -172,17 +196,18 @@ public class SearchController {
             search.addSearchFilter("NO_OF_ROOMS_BUCKET=" + rooms + "X" + rooms);
         }
 
+        /*
         // Ausgewählte Bezirke
         List<String> selectedDistricts = districtCheckComboBox.getCheckModel().getCheckedItems();
         if (!selectedDistricts.isEmpty()) {
-            search.addSearchFilter("districts=" + String.join(",", selectedDistricts));
+            //search.addSearchFilter("districts=" + String.join(",", selectedDistricts));
         }
 
         // Ausgewählte Bundesländer ("areaId")
         String areaIdFilter = generateAreaIdString();
         if (!areaIdFilter.isEmpty()) {
             search.addSearchFilter(areaIdFilter);
-        }
+        }*/
 
         debugLogger.info("Applied Filters: " + search.getSearchFilters());
     }
@@ -215,6 +240,8 @@ public class SearchController {
 
             // Generieren der areaId basierend auf der aktuellen Auswahl
             String areaIdFilter = generateAreaOrDistrictIdString();
+
+            //Testing
             System.out.println("Generierter areaId-String: " + areaIdFilter);
         });
 
@@ -222,6 +249,8 @@ public class SearchController {
         districtCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
             // Generieren der areaId basierend auf der aktuellen Auswahl der Bezirke
             String areaIdFilter = generateAreaOrDistrictIdString();
+
+            //Testing
             System.out.println("Generierter areaId-String (nach Bezirksauswahl): " + areaIdFilter);
         });
     }

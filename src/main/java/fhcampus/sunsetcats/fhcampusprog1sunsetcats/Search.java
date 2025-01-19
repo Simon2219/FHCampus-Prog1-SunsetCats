@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class Search
 {
     //Map of ArrayLists | 1 List of Items per Category searched
-    private String searchStartURL;
+    public String searchStartURL;
     private final ArrayList<String> searchFilters;
     private final boolean continueScrape;
 
@@ -139,7 +139,6 @@ public class Search
 
     public void setSearchStartURL(String searchStartURL) {
         this.searchStartURL = searchStartURL;
-        System.out.println("URL gesetzt: " + this.searchStartURL);
     }
 
     public boolean continueScrape()

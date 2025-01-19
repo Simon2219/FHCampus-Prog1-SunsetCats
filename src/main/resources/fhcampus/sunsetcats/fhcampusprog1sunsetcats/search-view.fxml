@@ -62,6 +62,23 @@
                 <TextField fx:id="priceFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
                 <TextField fx:id="priceToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
             </HBox>
+            <!-- Fläche -->
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
+            <HBox spacing="10">
+                <TextField fx:id="areaFromField" prefWidth="100" promptText="von" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                <TextField fx:id="areaToField" prefWidth="100" promptText="bis" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+            </HBox>
+
+            <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">
+                <children>
+                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="65.0">
+                        <children>
+                            <Button fx:id="resetFilters" mnemonicParsing="false" onAction="#resetFilters" text="Zurücksetzen" />
+                            <Button fx:id="startSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" />
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
         </VBox>
     </left>
 
