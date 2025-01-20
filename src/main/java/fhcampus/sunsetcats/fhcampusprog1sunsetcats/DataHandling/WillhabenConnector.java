@@ -59,8 +59,6 @@ public class WillhabenConnector extends DataConnector
 
         for(HashMap<String,String> searchResult : currentSearch.getRawSearchResults().values())
         {
-            String roomBucket = searchResult.get("NUMBER_OF_ROOMS"); // Willhaben-Daten
-
             Immobilie neueImmobilie = new Immobilie();
 
             neueImmobilie.setAttribute(Immobilie.AttributeKey.ID, searchResult.get("id"));
@@ -95,7 +93,7 @@ public class WillhabenConnector extends DataConnector
             neueImmobilie.setAttribute(Immobilie.AttributeKey.FREE_AREA_TYPE, searchResult.get("FREE_AREA_TYPE"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.FREE_AREA_TYPE_NAME, searchResult.get("FREE_AREA_TYPE_NAME"));
 
-            neueImmobilie.setAttribute(Immobilie.AttributeKey.NUMBER_OF_ROOMS, roomBucket);
+            neueImmobilie.setAttribute(Immobilie.AttributeKey.NUMBER_OF_ROOMS, searchResult.get("NUMBER_OF_ROOMS"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.ROOMS, searchResult.get("ROOMS"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.FLOOR, searchResult.get("FLOOR"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.NUMBER_OF_CHILDREN, searchResult.get("NUMBER_OF_CHILDREN"));
@@ -139,89 +137,5 @@ public class WillhabenConnector extends DataConnector
 
         return results;
     }
-
-    private boolean matchesRooms(String roomBucket, Integer userInputRooms) {
-        if (userInputRooms == null) {
-            return true; // Kein Filter -> immer Treffer
-        }
-        try {
-            int rooms = parseRoomsBucket(roomBucket); // Analysiere `roomBucket`
-            return rooms == userInputRooms; // Vergleiche mit Benutzereingabe
-        } catch (IllegalArgumentException e) {
-            Debug.warning("Ungültiger Raumwert in `roomBucket`: " + roomBucket);
-            return false; // Ungültige Daten -> Kein Treffer
-        }
-    }
-
-    private int parseRoomsBucket(String bucketValue) {
-        if (bucketValue == null || !bucketValue.matches("\\d+X\\d+")) {
-            throw new IllegalArgumentException("Ungültiger Wert für NUMBER_OF_ROOMS: " + bucketValue);
-        }
-        String[] parts = bucketValue.split("X");
-        return Integer.parseInt(parts[0]); // Gebe die Raumanzahl zurück
-    }
-
-
-    /*
-    // Build Search URL´s from Search Filters
-    private String buildURL(Search search) {
-        StringBuilder url = new StringBuilder();
-
-        // Start-URL hinzufügen
-        url.append(search.getSearchStartURL());
-
-        // Filter aus dem Search-Objekt hinzufügen
-        if (!search.getSearchFilters().isEmpty()) {
-            // Ersten Filter mit '?' anhängen
-            url.append("?");
-            url.append(search.getSearchFilters().get(0));
-
-            // Alle weiteren Filter mit '&' anhängen
-            for (int i = 1; i < search.getSearchFilters().size(); i++) {
-                url.append("&").append(search.getSearchFilters().get(i));
-            }
-        }
-
-        // Logging der generierten URL
-        Debug.info("Generated Search URL: " + url.toString());
-        return url.toString();
-    }
-
-    private String buildURL()
-    {
-        StringBuilder url = new StringBuilder();
-
-        url.append(URLTAG_WILLHABEN_IMMO_DEFAULT);
-        url.append(searchCategory);
-        url.append("?rows=").append(searchCount);
-
-
-        if (!searchCondition.isEmpty())
-        {
-            searchCondition.forEach(cond -> url.append("&treeAttributes=").append(cond));
-        }
-        if (!searchTransferType.isEmpty())
-        {
-            searchTransferType.forEach(trans -> url.append("&treeAttributes=").append(trans));
-        }
-        if (searchPayLivery)
-        {
-            url.append("&paylivery=true");
-        }
-        if (searchKeyword != null)
-        {
-            url.append("&keyword=").append(searchKeyword.replace(" ", "+"));
-        }
-
-
-        return url.toString();
-    }
-    */
-
-
-    //===========================================================================|| SIDE FUNCTIONS ||===========================================================================================================
-
-
-
 
 }

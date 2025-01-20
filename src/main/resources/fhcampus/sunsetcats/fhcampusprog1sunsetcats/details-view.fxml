@@ -18,6 +18,13 @@
          </padding>
          <children>
             <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Details" />
+            <Label fx:id="labelType" text="Type">
+               <graphic>
+                  <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Art:" />
+               </graphic>
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
             <Label fx:id="labelImmoType" text="Selected Type">
                <graphic>
                   <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Immobilientyp:" />
@@ -50,13 +57,6 @@
             <Label fx:id="labelEstateSize" text="Estate size">
                <graphic>
                   <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Fläche (m²):" />
-               </graphic>
-               <font>
-                  <Font size="16.0" />
-               </font></Label>
-            <Label fx:id="labelType" text="Type">
-               <graphic>
-                  <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Art:" />
                </graphic>
                <font>
                   <Font size="16.0" />
@@ -103,7 +103,7 @@
                      <children>
                         <Label fx:id="labelPublished" text="Published">
                            <graphic>
-                              <Label text="Veröffentlicht: " />
+                              <Label fx:id="labelVeroeffentlicht" text="Veröffentlicht: " />
                            </graphic>
                            <font>
                               <Font size="12.0" />

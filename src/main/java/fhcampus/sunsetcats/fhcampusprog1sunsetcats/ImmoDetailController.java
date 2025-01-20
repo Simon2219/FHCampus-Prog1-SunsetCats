@@ -2,7 +2,6 @@ package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,9 +38,9 @@ public class ImmoDetailController {
     @FXML
     private Label labelPublished;
     @FXML
-    private Button goBack; // Zurück-Button
+    private Label labelVeroeffentlicht;
     @FXML
-    private ImageView imageView; // Deklaration des ImageView
+    private ImageView imageView;
 
     private Immobilie immobilie;
 
@@ -62,14 +61,19 @@ public class ImmoDetailController {
                     Immobilie.AttributeKey.NUMBER_OF_ROOMS, labelNumberOfRooms,
                     Immobilie.AttributeKey.IMMO_TYPE, labelImmoType,
                     Immobilie.AttributeKey.FLOOR, labelFloor,
-                    // Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished,
+                    Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished,
                     Immobilie.AttributeKey.FREE_AREA_TYPE_NAME, labelFreeAreaType
             );
 
-            // Setze den Immobilientyp basierend auf dem gespeicherten Wert
+            // Setze den Typ (Miete/Eigentum) basierend auf dem gespeicherten Wert
             String immoType = ResultStore.getInstance().getSelectedType();
-            labelType.setText(immoType);
-            labelType.setVisible(true);
+            // Aktualisiere labelType oder blende es aus
+            if (immoType != null) {
+                labelType.setText(immoType);
+                labelType.setVisible(true);
+            } else {
+                labelType.setVisible(false);
+            }
 
             // Alle Labels aktualisieren oder ausblenden
             attributeLabelMap.forEach((key, label) -> {
@@ -83,9 +87,9 @@ public class ImmoDetailController {
             });
 
             // Bild aktualisieren oder ausblenden
-            Object imageUrl = immobilie.getAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK);
-            if (imageUrl != null && !imageUrl.toString().isEmpty()) {
-                imageView.setImage(new Image(imageUrl.toString(), true));
+            String imageUrl = immobilie.getAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK);
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                imageView.setImage(new Image(imageUrl, true));
                 imageView.setVisible(true);
             } else {
                 imageView.setImage(null);
@@ -94,7 +98,13 @@ public class ImmoDetailController {
 
             // Setze das formatierte Veröffentlichungsdatum
             String publishedDate = immobilie.getAttribute(Immobilie.AttributeKey.PUBLISHED_STRING);
-            labelPublished.setText(formatPublishedDate(publishedDate));
+            if (immoType != null) {
+                labelPublished.setText(formatPublishedDate(publishedDate));
+                labelPublished.setVisible(true);
+            } else {
+                labelPublished.setVisible(false);
+                labelVeroeffentlicht.setVisible(false);
+            }
         } else {
             // Keine Immobilie ausgewählt: Alle Elemente ausblenden
             resetDetailView();
@@ -107,20 +117,13 @@ public class ImmoDetailController {
 
     public String formatPublishedDate(String isoDate) {
         if (isoDate == null || isoDate.isEmpty()) {
-            return ""; // Rückgabe eines Standardwerts, wenn das Datum nicht verfügbar ist
+            return null; // Rückgabe eines Standardwerts, wenn das Datum nicht verfügbar ist
         }
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(isoDate); // Konvertiere den ISO 8601 String in ein OffsetDateTime Objekt
+        ZonedDateTime zonedDateTime = offsetDateTime.atZoneSameInstant(ZoneId.systemDefault()); // Wandle das OffsetDateTime in die lokale Zeit um
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // Definiere das gewünschte Format für Datum und Uhrzeit
 
-        // Konvertiere den ISO 8601 String in ein OffsetDateTime Objekt
-        OffsetDateTime offsetDateTime = OffsetDateTime.parse(isoDate);
-
-        // Wandle das OffsetDateTime in die lokale Zeit um
-        ZonedDateTime zonedDateTime = offsetDateTime.atZoneSameInstant(ZoneId.systemDefault());
-
-        // Definiere das gewünschte Format für Datum und Uhrzeit
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
-        // Formatiere das Datum und die Uhrzeit
-        return zonedDateTime.format(dateFormatter);
+        return zonedDateTime.format(dateFormatter); // Formatiere das Datum und die Uhrzeit
     }
 
     // Methode zur Formatierung des Preises und der Fläche
@@ -129,12 +132,6 @@ public class ImmoDetailController {
         numberFormat.setMinimumFractionDigits(2);  // Mindestens 2 Dezimalstellen
         numberFormat.setMaximumFractionDigits(2);  // Höchstens 2 Dezimalstellen
         return numberFormat.format(doubleValue);
-    }
-
-    public void setImmobilie(Immobilie immobilie) {
-        this.immobilie = ResultStore.getInstance().getSelectedImmo();
-        System.out.println("Immobilie " + immobilie + " selected");
-        updateDetails();
     }
 
     // Formatierung je nach Attribut
@@ -149,15 +146,6 @@ public class ImmoDetailController {
             return formatPublishedDate(value.toString());
         }
         return value.toString();
-    }
-
-    private String parseRoomsBucket(String bucketValue) {
-        if (bucketValue == null || !bucketValue.matches("\\d+X\\d+")) {
-            throw new IllegalArgumentException("Ungültiger Wert für NO_OF_ROOMS_BUCKET: " + bucketValue);
-        }
-        // Teilt "3X3" in ["3", "3"]
-        String[] parts = bucketValue.split("X");
-        return parts[0]; // Rückgabe der Raumanzahl
     }
 
     // Alle UI-Elemente zurücksetzen
