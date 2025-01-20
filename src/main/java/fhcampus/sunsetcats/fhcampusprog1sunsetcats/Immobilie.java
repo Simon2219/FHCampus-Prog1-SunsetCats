@@ -1,7 +1,9 @@
 package fhcampus.sunsetcats.fhcampusprog1sunsetcats;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Immobilie implements Serializable
@@ -61,7 +63,7 @@ public class Immobilie implements Serializable
 
         VIRTUAL_VIEW_LINK("virtualViewLink", String.class),
         IMAGE_DESCRIPTION("imageDescription", String.class),
-        ALL_IMAGE_URLS("allImageUrls", String.class),
+        ALL_IMAGE_URLS("allImageUrls", List.class),
 
         ORGNAME("organizationName", String.class),
         ORGID("orgId", String.class),
@@ -128,7 +130,7 @@ public class Immobilie implements Serializable
 
     // Setter
     // Setter
-    public <T> void setAttribute(AttributeKey key, String value)
+    public <T> void setAttribute(AttributeKey key, T value)
     {
         try // Convert the string value to the target type
         {
@@ -150,27 +152,33 @@ public class Immobilie implements Serializable
 
     // Convert the string to the target type
     @SuppressWarnings("unchecked")
-    private <T> T convertToTargetType(AttributeKey key, String value)
+    private <T> T convertToTargetType(AttributeKey key, T value)
     {
         Class<?> type = key.getType();
         try
         {
             if (type == Integer.class)
             {
-                return (T) Integer.valueOf(value);
+                return (T) Integer.valueOf((String)value);
             } else if (type == Double.class)
             {
-                return (T) Double.valueOf(value);
+                return (T) Double.valueOf((String)value);
             } else if (type == Float.class)
             {
-                return (T) Float.valueOf(value);
+                return (T) Float.valueOf((String)value);
             } else if (type == Boolean.class)
             {
-                return (T) Boolean.valueOf(value);
+                return (T) Boolean.valueOf((String)value);
             } else if (type == String.class)
             {
-                return (T) value; // No conversion needed for String
-            } else
+                return (T) String.valueOf(value); // No conversion needed for String
+            } else if (type == List.class)
+            {
+                ArrayList<T> list = new ArrayList<T>();
+                list = (ArrayList<T>) value;
+                return (T) list;
+            }
+            else
             {
                 throw new IllegalArgumentException("Unsupported type: " + type.getSimpleName());
             }
@@ -199,7 +207,11 @@ public class Immobilie implements Serializable
         } else if (type == String.class)
         {
             return (T) "Unknown";
-        } else
+        } else if (type == List.class)
+        {
+            return (T) new ArrayList<String>();
+        }
+        else
         {
             throw new IllegalArgumentException("Unsupported type: " + type.getSimpleName());
         }

@@ -103,7 +103,6 @@ public class WillhabenConnector extends DataConnector
             neueImmobilie.setAttribute(Immobilie.AttributeKey.PROPERTY_TYPE_FLAT, searchResult.get("PROPERTY_TYPE_FLAT"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK, searchResult.get("VIRTUAL_VIEW_LINK"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.IMAGE_DESCRIPTION, searchResult.get("IMAGE_DESCRIPTION"));
-            neueImmobilie.setAttribute(Immobilie.AttributeKey.ALL_IMAGE_URLS, searchResult.get("ALL_IMAGE_URLS"));
 
             neueImmobilie.setAttribute(Immobilie.AttributeKey.ORGNAME, searchResult.get("ORGNAME"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.ORGID, searchResult.get("ORGID"));
@@ -131,6 +130,17 @@ public class WillhabenConnector extends DataConnector
             neueImmobilie.setAttribute(Immobilie.AttributeKey.AD_SEARCHRESULT_LOGO, searchResult.get("AD_SEARCHRESULT_LOGO"));
             neueImmobilie.setAttribute(Immobilie.AttributeKey.PROJECT_ID, searchResult.get("PROJECT_ID"));
 
+            ArrayList<String> imageUrls = new ArrayList<String>();
+            for(int i = 0; i < 5; i++)
+            {
+                if(!searchResult.containsKey("image"+i)) { continue; }
+
+                imageUrls.add(searchResult.get("image"+i));
+
+            }
+            neueImmobilie.setAttribute(Immobilie.AttributeKey.ALL_IMAGE_URLS, imageUrls);
+
+            System.out.println(imageUrls);
             results.add(neueImmobilie);
             }
 
