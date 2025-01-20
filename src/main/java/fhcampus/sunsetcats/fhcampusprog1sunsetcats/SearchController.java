@@ -71,6 +71,7 @@ public class SearchController {
 
     @FXML
     private void startSearch() {
+
         // Wohnung und Haus mit Miete/Eigentum prüfen und URL entsprechend setzen
         if (radioWohnung.isSelected() && radioMiete.isSelected()) {
             baseURL += "/mietwohnungen/mietwohnung-angebote?";
@@ -132,7 +133,7 @@ public class SearchController {
         districtCheckComboBox.getCheckModel().clearChecks();
     }
 
-    /*
+
     public String getSelectedImmoType() {
         if (radioMiete.isSelected()) {
             return "Miete";
@@ -140,7 +141,7 @@ public class SearchController {
             return "Eigentum";
         }
         return "Unbekannt";
-    }*/
+    }
 
 
     /**

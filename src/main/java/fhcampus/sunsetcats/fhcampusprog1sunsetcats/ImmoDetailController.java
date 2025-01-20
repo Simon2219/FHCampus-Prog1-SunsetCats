@@ -157,4 +157,5 @@ public class ImmoDetailController {
         labels.forEach(label -> label.setVisible(false));
         imageView.setVisible(false);
     }
+
 }

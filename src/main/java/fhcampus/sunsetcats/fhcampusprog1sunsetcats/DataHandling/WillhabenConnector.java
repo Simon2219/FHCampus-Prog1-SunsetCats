@@ -45,7 +45,6 @@ public class WillhabenConnector extends DataConnector
         return results;
     }
 
-
 /*
     Immo Factory
     Wandle Suchergebnisse in Immobilien Objekte um - Spezifisch zu jeder Website
