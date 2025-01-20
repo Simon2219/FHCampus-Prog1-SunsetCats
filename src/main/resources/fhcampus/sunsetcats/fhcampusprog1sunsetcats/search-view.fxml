@@ -16,7 +16,7 @@
     <!-- Filter-Bereich auf der linken Seite -->
     <left>
         <!-- ScrollPane um den gesamten Filterbereich -->
-        <ScrollPane fitToWidth="true" style="-fx-padding: 10;">
+        <ScrollPane prefHeight="900" fitToWidth="true" style="-fx-padding: 10;">
             <VBox prefWidth="300" spacing="15" style="-fx-background-color: #F4F4F4; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
                 <padding>
                     <Insets bottom="20" left="20" right="20" top="20" />

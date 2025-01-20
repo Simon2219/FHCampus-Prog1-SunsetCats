@@ -38,8 +38,6 @@ public class ImmoDetailController {
     @FXML
     private Label labelPublished;
     @FXML
-    private Label labelVeroeffentlicht;
-    @FXML
     private ImageView imageView;
 
     private Immobilie immobilie;
@@ -94,16 +92,6 @@ public class ImmoDetailController {
             } else {
                 imageView.setImage(null);
                 imageView.setVisible(false);
-            }
-
-            // Setze das formatierte Veröffentlichungsdatum
-            String publishedDate = immobilie.getAttribute(Immobilie.AttributeKey.PUBLISHED_STRING);
-            if (immoType != null) {
-                labelPublished.setText(formatPublishedDate(publishedDate));
-                labelPublished.setVisible(true);
-            } else {
-                labelPublished.setVisible(false);
-                labelVeroeffentlicht.setVisible(false);
             }
         } else {
             // Keine Immobilie ausgewählt: Alle Elemente ausblenden

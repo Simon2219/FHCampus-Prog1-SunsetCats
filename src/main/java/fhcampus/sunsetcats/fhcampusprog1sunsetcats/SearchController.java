@@ -112,6 +112,8 @@ public class SearchController {
         printResults(results);
         ResultStore.getInstance().setSearchResults(results);
         Navigation.loadContentToArea(resultArea, "result-view.fxml");
+
+        baseURL = "https://www.willhaben.at/iad/immobilien";
     }
 
     @FXML
