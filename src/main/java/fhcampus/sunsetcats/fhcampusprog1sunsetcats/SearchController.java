@@ -101,12 +101,11 @@ public class SearchController {
         String areaToFilter = getSizeTo();
         String keywordsFilter = getKeywords();
 
-        // Test: Print der areaIdFilter zur Überprüfung
-        System.out.println("Generierter areaId-Filter: " + areaIdFilter); // Test-Ausgabe
-
+        //adds all Filters, if Filter is not applied, empty String will be added
         finalURL = baseURL + areaIdFilter + RoomsFilter + FromPriceFilter + ToPriceFilter + areaFromFilter + areaToFilter + keywordsFilter;
-        //String finalURL = baseURL + areaIdFilter;
-        System.out.println("Finale Base-URL: " + finalURL);
+
+        //prints out final URL for Debugging
+        System.out.println("Finale-URL: " + finalURL);
 
         Search searchImmo = new Search(finalURL, false);
 
@@ -133,11 +132,12 @@ public class SearchController {
         areaFromField.clear();
         areaToField.clear();
 
-        // Dropdown-Filter zurücksetzen
+        // Dropdown-Liste zurücksetzen
         locationCheckComboBox.getCheckModel().clearChecks();
         districtCheckComboBox.getCheckModel().clearChecks();
     }
 
+    /*
     public String getSelectedImmoType() {
         if (radioMiete.isSelected()) {
             return "Miete";
@@ -145,15 +145,25 @@ public class SearchController {
             return "Eigentum";
         }
         return "Unbekannt";
-    }
+    }*/
 
+
+    /**
+     * Constructs a query string for the number of rooms based on user input.
+     * Retrieves the text from the `roomField` input field, formats it as a query parameter
+     * for the number of rooms, and appends it to the `finalURL`.
+     * If the input is null or empty, empty String is added.
+     *
+     * @return a concatenated URL string with the number of rooms query parameter,
+     *         or the original `finalURL` if no input is provided.
+     */
     public String getRooms() {
         String rooms = roomField.getText();
         String amountRooms = "";
         if (rooms != null && !rooms.isEmpty()) {
             amountRooms = ("&NO_OF_ROOMS_BUCKET=" + rooms + "X" + rooms);
         }
-        return finalURL + amountRooms;
+        return amountRooms;
     }
 
     public String getPriceFrom() {
@@ -162,7 +172,7 @@ public class SearchController {
         if (priceFrom != null && !priceFrom.isEmpty()) {
             amountPriceFrom = ("&PRICE_FROM=" + priceFrom);
         }
-        return finalURL + amountPriceFrom;
+        return amountPriceFrom;
     }
 
     public String getPriceTo() {
@@ -171,7 +181,7 @@ public class SearchController {
         if (priceTo != null && !priceTo.isEmpty()) {
             amountPriceTo = ("&PRICE_TO=" + priceTo);
         }
-        return finalURL + amountPriceTo;
+        return amountPriceTo;
     }
 
     public String getSizeFrom() {
@@ -180,7 +190,7 @@ public class SearchController {
         if (sizeFrom != null && !sizeFrom.isEmpty()) {
             amountSizeFrom = ("&ESTATE_SIZE/LIVING_AREA_FROM=" + sizeFrom);
         }
-        return finalURL + amountSizeFrom;
+        return amountSizeFrom;
     }
 
     public String getSizeTo() {
@@ -189,7 +199,7 @@ public class SearchController {
         if (sizeTo != null && !sizeTo.isEmpty()) {
             amountSizeTo = ("&ESTATE_SIZE/LIVING_AREA_TO=" + sizeTo);
         }
-        return finalURL + amountSizeTo;
+        return amountSizeTo;
     }
 
     // Keywords als URL-Teil formatieren
@@ -212,7 +222,7 @@ public class SearchController {
                 allKeywords += "&keyword=" + keyword;
             }
         }
-        return finalURL + allKeywords;
+        return allKeywords;
     }
 
     private static void printResults(ArrayList<Immobilie> searchResults) {
@@ -229,6 +239,13 @@ public class SearchController {
 
     // --- Dropdown-Logik für Bezirke/Bundesländer ---
 
+    /**
+     * Configures the locationCheckComboBox by populating it with a predefined list of state names.
+     * This method adds predefined states to the combo box in order to allow selection of
+     * specific locations by the user.
+     *
+     * The setup provides a foundational list of options for filtering or searching based on location.
+     */
     private void setupLocationCheckComboBox() {
         locationCheckComboBox.getItems().addAll(
                 "Wien", "Niederösterreich", "Burgenland", "Oberösterreich",
@@ -236,6 +253,18 @@ public class SearchController {
         );
     }
 
+    /**
+     * Configures the logic to manage the visibility and behavior of dropdowns
+     * associated with locations and districts. This method attaches listeners
+     * to monitor changes in the selection of the location and district combo boxes.
+     *
+     * - When the selection in the `locationCheckComboBox` (states) is modified:
+     *   - Clears the selected districts in `districtCheckComboBox`.
+     *   - Updates the visibility of the district dropdown based on the selected states.
+     *
+     * This setup ensures that the state and district selections remain consistent
+     * and dynamically update the dropdown's visibility as required.
+     */
     private void setupDropdownVisibilityLogic() {
         // Listener für die Auswahl in der locationCheckComboBox (Bundesländer)
         locationCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
@@ -244,18 +273,18 @@ public class SearchController {
 
             // Aktualisiere die Sichtbarkeit der Bezirksauswahl basierend auf dem ausgewählten Bundesland
             updateDistrictDropdownVisibility();
-
-            // Test-Ausgabe (debugging)
-            System.out.println("Bundesland geändert - Bezirke wurden geleert.");
-        });
-
-        // Listener für die Auswahl in der districtCheckComboBox (Bezirke)
-        districtCheckComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
-            // Optional: Aktionen bei Änderung der Bezirksauswahl (falls benötigt)
-            System.out.println("Bezirksauswahl geändert.");
         });
     }
 
+    /**
+     * Updates the visibility and manageability of the district dropdown container
+     * based on the selected states from the location check combo box.
+     *
+     * If no states are selected, the district dropdown container is hidden and
+     * unmanaged. Otherwise, the items in the district check combo box are
+     * updated according to the selected states, and the district dropdown
+     * container is made visible and manageable.
+     */
     private void updateDistrictDropdownVisibility() {
         List<String> selectedStates = locationCheckComboBox.getCheckModel().getCheckedItems();
 
@@ -270,6 +299,15 @@ public class SearchController {
         districtDropdownContainer.setManaged(true);
     }
 
+    /**
+     * Updates the items in the districtCheckComboBox based on the selected states.
+     * Depending on the selected states, it retrieves the corresponding districts
+     * and combines them into a single list to populate the combo box.
+     *
+     * @param selectedStates a list of strings representing the states that the user has selected.
+     *                        Each state determines which districts are added to the list displayed
+     *                        in the districtCheckComboBox.
+     */
     private void updateDistrictCheckComboBox(List<String> selectedStates) {
         List<String> combinedDistricts = new ArrayList<>();
 
@@ -305,10 +343,10 @@ public class SearchController {
     }
 
     /**
-     * Generiert den "areaId=<Nummer>"-String für die ausgewählten Bundesländer
-     * und verknüpft diese mit "&".
-     *
-     * @return Ein String mit den verknüpften "areaId=<Nummer>"-Werten.
+     * Generates a query string representing the area IDs based on the selected states.
+     * If no states are selected, a default value for Vienna ("areaId=9") is returned.
+     * For each selected state, the corresponding area ID string is retrieved using
+     * the getAreaIdStringForState method and concatenated with "&" as a separator.
      */
     private String generateAreaIdString() {
         List<String> selectedStates = locationCheckComboBox.getCheckModel().getCheckedItems();
@@ -323,11 +361,14 @@ public class SearchController {
                 .collect(Collectors.joining("&")); // Verknüpfe mit "&"
     }
 
+
     /**
-     * Gibt den entsprechenden "areaId=<Nummer>"-String für ein Bundesland zurück.
+     * Returns the area ID string corresponding to the given state name.
+     * If the state name matches a predefined case, the corresponding area ID string
+     * is returned. If the state name does not match any case, an empty string is returned.
      *
-     * @param state Der Name des Bundeslands.
-     * @return Der "areaId=<Nummer>"-String oder ein leerer String bei ungültiger Eingabe.
+     * @param state the name of the state for which the area ID string needs to be retrieved
+     * @return the area ID string for the given state or an empty string if the state is not found
      */
     private String getAreaIdStringForState(String state) {
         switch (state) {
@@ -350,14 +391,19 @@ public class SearchController {
             case "Wien":
                 return "areaId=9";
             default:
-                return ""; // Kein gültiges Bundesland
+                return "";
         }
     }
 
     /**
-     * Generiert den passenden areaId-String, abhängig von der Auswahl der Bezirke oder der Bundesländer.
-     * Wenn Bezirke ausgewählt wurden, wird der String für die Bezirke erzeugt.
-     * Ansonsten wird die areaId des Bundeslands verwendet.
+     * Generates a query string representing the district or area IDs based on the user's selected districts.
+     * The method first combines district mappings from all states into a unified map. Then, it checks for any
+     * selected districts. If districts are selected, their corresponding IDs are mapped into a query string
+     * format and concatenated using "&" as a separator. If no districts are selected, a fallback query string
+     * for area IDs is generated and returned.
+     *
+     * @return a query string of the selected districts' IDs in the format "areaId=ID&...". If no districts
+     *         are selected, it returns a fallback result from the `generateAreaIdString` method.
      */
     private String generateAreaOrDistrictIdString() {
         // Mapping abh. vom Bundesland
@@ -385,11 +431,14 @@ public class SearchController {
         return generateAreaIdString();
     }
 
-    /**
-     * Gibt die Map mit den IDs aller Bezirke in Niederösterreich zurück.
-     * Die IDs hier sind dreistellig, wobei die erste Zahl (z. B. "3") verwendet wird.
-     */
 
+    //Methods for the states
+
+    /**
+     * Retrieves a mapping of district names to their corresponding IDs for the corresponding state.
+     *
+     * @return a Map where the keys are district names of the state and the values are their corresponding IDs.
+     */
     private Map<String, String> getDistrictIdsForBurgenland() {
         Map<String, String> districtIds = new HashMap<>();
         districtIds.put("Eisenstadt", "101");
@@ -554,6 +603,11 @@ public class SearchController {
 
     // Methoden für Bezirke
 
+    /**
+     * Retrieves a list of districts for the corresponding state.
+     *
+     * @return a list of strings, where each string represents a district of a state.
+     */
     private List<String> getDistrictsForWien() {
         return List.of(
                 "01. Bezirk, Innere Stadt",
