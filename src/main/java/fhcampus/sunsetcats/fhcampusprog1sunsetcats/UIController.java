@@ -40,8 +40,6 @@ public class UIController {
 
     // Initialize the controller
     public void initialize() {
-//        Image logoFile = new Image(getClass().getResource("SunsetCats_Logo_Web_RotGelb.png").toExternalForm());
-//        smallLogo.setImage(logoFile);
         displayWelcome();
     }
 
@@ -55,8 +53,8 @@ public class UIController {
     void displaySearch() {
         Navigation.loadContent("search-view.fxml");
         Stage stage = (Stage) dynamicContentArea.getScene().getWindow();
-        stage.setWidth(1200);  // Standardbreite
-        stage.setHeight(800); // Standardhöhe
+        //stage.setWidth(1200);  // Standardbreite
+       // stage.setHeight(900); // Standardhöhe
 
     }
 

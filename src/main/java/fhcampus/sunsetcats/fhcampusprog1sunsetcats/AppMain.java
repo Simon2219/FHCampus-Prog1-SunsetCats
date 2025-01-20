@@ -32,7 +32,7 @@ public class AppMain extends Application
 
         // Fenstergröße festlegen
         stage.setWidth(1200); // Breite
-        stage.setHeight(800); // Höhe
+        stage.setHeight(900); // Höhe
 
         // Fenster-Titel
         stage.setTitle("Sunset Cats Immobilien");
