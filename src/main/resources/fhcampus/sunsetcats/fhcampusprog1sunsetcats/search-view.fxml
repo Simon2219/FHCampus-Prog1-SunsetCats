@@ -41,7 +41,7 @@
                 <!-- Standort -->
                 <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Standort:" />
                 <VBox>
-                    <CheckComboBox fx:id="locationCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
+                    <CheckComboBox fx:id="statesCheckComboBox" style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-color: #FFFFFF;" />
                     <Label text="Bundesland auswählen"
                            style="-fx-font-size: 14px; -fx-font-style: italic; -fx-text-fill: #AAAAAA; -fx-padding: 10;"
                            alignment="CENTER_LEFT"
