@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,20 +59,9 @@ public class ImmoDetailController {
                     Immobilie.AttributeKey.ESTATE_SIZE_TOTAL, labelEstateSize,
                     Immobilie.AttributeKey.NUMBER_OF_ROOMS, labelNumberOfRooms,
                     Immobilie.AttributeKey.IMMO_TYPE, labelImmoType,
-                    Immobilie.AttributeKey.FLOOR, labelFloor,
-                    Immobilie.AttributeKey.PUBLISHED_STRING, labelPublished,
-                    Immobilie.AttributeKey.FREE_AREA_TYPE_NAME, labelFreeAreaType
+                    Immobilie.AttributeKey.FLOOR, labelFloor
+                    // Immobilie.AttributeKey.FREE_AREA_TYPE_NAME, labelFreeAreaType
             );
-
-            // Setze den Typ (Miete/Eigentum) basierend auf dem gespeicherten Wert
-            String immoType = ResultStore.getInstance().getSelectedType();
-            // Aktualisiere labelType oder blende es aus
-            if (immoType != null) {
-                labelType.setText(immoType);
-                labelType.setVisible(true);
-            } else {
-                labelType.setVisible(false);
-            }
 
             // Alle Labels aktualisieren oder ausblenden
             attributeLabelMap.forEach((key, label) -> {
@@ -84,8 +74,19 @@ public class ImmoDetailController {
                 }
             });
 
+            // Setze den Typ (Miete/Eigentum) basierend auf dem gespeicherten Wert
+            String immoType = ResultStore.getInstance().getSelectedType();
+            // Aktualisiere labelType oder blende es aus
+            if (immoType != null) {
+                labelType.setText(immoType);
+                labelType.setVisible(true);
+            } else {
+                labelType.setVisible(false);
+            }
+
             // Bild aktualisieren oder ausblenden
-            String imageUrl = immobilie.getAttribute(Immobilie.AttributeKey.VIRTUAL_VIEW_LINK);
+            ArrayList<String> images = immobilie.getAttribute(Immobilie.AttributeKey.ALL_IMAGE_URLS);
+            String imageUrl = images.get(0);
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 imageView.setImage(new Image(imageUrl, true));
                 imageView.setVisible(true);
@@ -103,7 +104,7 @@ public class ImmoDetailController {
         Navigation.loadContent("search-view.fxml");
     }
 
-    public String formatPublishedDate(String isoDate) {
+    /* public String formatPublishedDate(String isoDate) {
         if (isoDate == null || isoDate.isEmpty()) {
             return null; // Rückgabe eines Standardwerts, wenn das Datum nicht verfügbar ist
         }
@@ -112,7 +113,7 @@ public class ImmoDetailController {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // Definiere das gewünschte Format für Datum und Uhrzeit
 
         return zonedDateTime.format(dateFormatter); // Formatiere das Datum und die Uhrzeit
-    }
+    } */
 
     // Methode zur Formatierung des Preises und der Fläche
     public String formatDoubleValue(double doubleValue) {
@@ -131,7 +132,7 @@ public class ImmoDetailController {
                 return "Ungültiger Wert";
             }
         } else if (key == Immobilie.AttributeKey.PUBLISHED_STRING) {
-            return formatPublishedDate(value.toString());
+            return "";
         }
         return value.toString();
     }

@@ -69,14 +69,6 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="labelFreeAreaType" layoutX="21.0" layoutY="274.0" text="Free Area">
-               <graphic>
-                  <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555;" text="Freifläche:" />
-               </graphic>
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
             <VBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="279.0">
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="100.0">
@@ -99,18 +91,7 @@
             <VBox fx:id="resultArea" prefHeight="673.0" prefWidth="600.0">
                <children>
                   <ImageView fx:id="imageView" fitHeight="300.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
-                  <FlowPane prefHeight="31.0" prefWidth="600.0">
-                     <children>
-                        <Label fx:id="labelPublished" text="Published">
-                           <graphic>
-                              <Label text="Veröffentlicht: " />
-                           </graphic>
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </FlowPane>
+                  <FlowPane prefHeight="31.0" prefWidth="600.0" />
                   <FlowPane prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Label fx:id="labelDescription" maxWidth="580" text="Description Text" wrapText="true">
