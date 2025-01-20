@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.UIController">
+<BorderPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fhcampus.sunsetcats.fhcampusprog1sunsetcats.UIController">
 
     <!-- Left Menu Section -->
     <left>
@@ -23,7 +23,7 @@
             <children>
                <Button fx:id="welcome" mnemonicParsing="false" onAction="#displayWelcome" styleClass="menu-button" text="Startseite" />
                   <Button fx:id="search" onAction="#displaySearch" styleClass="menu-button" text="Suche" />
-                  <Button fx:id="results" onAction="#displayResults" styleClass="menu-button" text="Letzte Ergebnisse" visible="false"/>
+                  <Button fx:id="results" onAction="#displayResults" styleClass="menu-button" text="Letzte Ergebnisse" visible="false" />
             </children>
          </VBox>
          <Region prefHeight="200.0" />
@@ -46,7 +46,7 @@
 
     <!-- Main Display Section -->
     <center>
-        <VBox fx:id="dynamicContentArea" alignment="CENTER" maxHeight="+Infinity" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER" VBox.vgrow="always">
+        <VBox fx:id="dynamicContentArea" alignment="CENTER" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER" VBox.vgrow="always">
             <!-- Dynamic content will load here! -->
         </VBox>
     </center>
